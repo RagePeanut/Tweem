@@ -32,10 +32,12 @@
         "remove_tags_by_length_opposite": false,
         "remove_tags_by_order": true,
         "remove_tags_by_order_opposite": false,
-        "tag_limit": 5
+        "tag_limit": 5,
+        "tweet_posts": true,
+        "tweet_resteems": true
     },
     "steem_accounts": [
-        "ragepeanut"
+        "nuttinghere"
     ],
     "tweet_retry_timeout": 10000
 }
