@@ -104,7 +104,7 @@ function stream() {
                             // If the message is too long, trims the title
                             if(message.length + LINK_LENGTH > MAX_TWEET_LENGTH) {
                                 let neededLength = message.length + LINK_LENGTH - MAX_TWEET_LENGTH;
-                                message = message.replace(result.title.substr(0, result.title.length - neededLength - 3) + '...');
+                                message = message.replace(result.title, result.title.substr(0, result.title.length - neededLength - 3) + '...');
                             }
                             // First parameter (app): checking for all the known ways of specifying an app, if none of them exists the app is set to undefined
                             message += getWebsite(metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined, result.author, result.permlink, result.url, metadata.tags, result.body)
