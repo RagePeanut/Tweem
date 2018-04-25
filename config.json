@@ -1,0 +1,37 @@
+{
+    "nodes": [
+        "https://rpc.steemviz.com",
+        "https://api.steemit.com",
+        "https://rpc.buildteam.io",
+        "https://api.steem.house",
+        "https://rpc.curiesteem.com"
+    ],
+    "settings": {
+        "allowed_links": {
+            "bescouted": true,
+            "busy": true,
+            "dlive": true,
+            "dmania": true,
+            "dsound": true,
+            "dtube": true,
+            "fundition": true,
+            "parley": true,
+            "steemhunt": true,
+            "steemkr": true,
+            "steepshot": true,
+            "utopian": true,
+            "zappl": true
+        },
+        "check_for_duplicate_tags": true,
+        "escape_starting_mention": true,
+        "include_tags": true,
+        "include_title": true,
+        "remove_mentions": false,
+        "remove_mentions_at_char": false,
+        "tag_limit": 5
+    },
+    "steem_accounts": [
+        "ragepeanut"
+    ],
+    "tweet_retry_timeout": 10000
+}

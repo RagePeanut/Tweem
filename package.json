@@ -1,0 +1,30 @@
+{
+  "name": "tweem",
+  "version": "1.0.0",
+  "description": "A bot tweeting all the posts resteemed by Fundition",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon --exec \"heroku local\" --signal SIGTERM",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fundition",
+    "twitter",
+    "steem",
+    "steemit",
+    "crowdfunding",
+    "crowd",
+    "funding"
+  ],
+  "author": "RagePeanut / Fundition",
+  "license": "MIT",
+  "dependencies": {
+    "steem": "^0.7.1",
+    "twit": "^2.2.9"
+  },
+  "engines": {
+    "node": "8.6.0"
+  },
+  "devDependencies": {}
+}
