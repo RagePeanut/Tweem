@@ -1,7 +1,7 @@
 {
   "name": "tweem",
   "version": "1.0.0",
-  "description": "A bot tweeting all the posts resteemed by Fundition",
+  "description": "A bot tweeting all the resteems and/or recent posts of specified accounts.",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
@@ -9,15 +9,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "fundition",
     "twitter",
     "steem",
     "steemit",
-    "crowdfunding",
-    "crowd",
-    "funding"
+    "tweet",
+    "bot",
+    "automated"
   ],
-  "author": "RagePeanut / Fundition",
+  "author": "RagePeanut",
   "license": "MIT",
   "dependencies": {
     "steem": "^0.7.1",

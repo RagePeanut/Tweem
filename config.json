@@ -28,10 +28,14 @@
         "include_title": true,
         "remove_mentions": false,
         "remove_mentions_at_char": false,
+        "remove_tags_by_length": false,
+        "remove_tags_by_length_opposite": false,
+        "remove_tags_by_order": true,
+        "remove_tags_by_order_opposite": false,
         "tag_limit": 5
     },
     "steem_accounts": [
-        "ragepeanut"
+        "nuttinghere"
     ],
     "tweet_retry_timeout": 10000
 }
