@@ -32,7 +32,7 @@
         "remove_tags_by_length_opposite": false,
         "remove_tags_by_order": true,
         "remove_tags_by_order_opposite": false,
-        "tag_limit": 5,
+        "tag_limit": false,
         "tweet_posts": true,
         "tweet_resteems": true
     },
