@@ -105,9 +105,22 @@ function getWebsite(app, author, permlink, url, tags, body) {
 function treatOperation(author, permlink) {
     // Getting the content of the post
     steem.api.getContent(author, permlink, (err, result) => {
-        if(err) console.log(err.message, 'encountered while getting the content of /@' + author + '/' + permlink);
-        else {
-            const metadata = JSON.parse(result.json_metadata);
+        if(err) {
+            console.log(err.message, 'encountered while getting the content of /@' + author + '/' + permlink);
+            console.log('Retrying...');
+            treatOperation(author, permlink);
+        } else {
+            let metadata;
+            try {
+                metadata = JSON.parse(result.json_metadata);
+                if(!metadata) throw new Error('The metadata is ', metadata);
+                if(typeof metadata !== 'object') throw new Error('The metadata is of type ' + typeof metadata);
+            } catch(err) {
+                console.log('Error:', err.message);
+                console.log('Retrying...');
+                treatOperation(author, permlink);
+                return;
+            }
             let message = '';
             // Title
             if(settings.include_title) {
@@ -175,7 +188,7 @@ function treatOperation(author, permlink) {
                 message = message.replace(result.title, result.title.substr(0, result.title.length - neededLength - 3) + '...');
             }
             // First parameter (app): checking for all the known ways of specifying an app, if none of them exists the app is set to undefined
-            message += getWebsite(metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined, result.author, result.permlink, result.url, metadata.tags, result.body)
+            message += getWebsite(metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined, result.author, result.permlink, result.url, metadata.tags, result.body);
             tweet(message);
         }
     });
