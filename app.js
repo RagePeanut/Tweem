@@ -35,7 +35,7 @@ function stream() {
                 const op = JSON.parse(operation[1].json);
                 // Checking if it's a resteem and if it's from one of the specified accounts
                 if(op[0] === 'reblog' && steem_accounts.includes(op[1].account)) {
-                    treatOperation(op[1].account, op[1].permlink);
+                    treatOperation(op[1].author, op[1].permlink);
                 }
             // Checking if it's a post (not a comment) made by one of the specified accounts
             } else if(settings.tweet_posts && operation[0] === 'comment' && steem_accounts.includes(operation[1].author) && operation[1].parent_author === '') {
@@ -55,6 +55,7 @@ function stream() {
 function tweet(message) {
     twitter.post('statuses/update', { status: message }, (err, data, response) => {
         if(err) setTimeout(tweet, tweet_retry_timeout, message);
+        else console.log('Successfully tweeted', message);
     });
 }
 
@@ -108,7 +109,7 @@ function treatOperation(author, permlink) {
         if(err) {
             console.log(err.message, 'encountered while getting the content of /@' + author + '/' + permlink);
             console.log('Retrying...');
-            treatOperation(author, permlink);
+            setTimeout(treatOperation, 5000, author, permlink);
         } else {
             let metadata;
             try {
@@ -116,9 +117,9 @@ function treatOperation(author, permlink) {
                 if(!metadata) throw new Error('The metadata is ', metadata);
                 if(typeof metadata !== 'object') throw new Error('The metadata is of type ' + typeof metadata);
             } catch(err) {
-                console.log('Error:', err.message);
+                console.log('Error:', err.message, 'with', author, 'and', permlink);
                 console.log('Retrying...');
-                treatOperation(author, permlink);
+                setTimeout(treatOperation, 5000, author, permlink);
                 return;
             }
             let message = '';

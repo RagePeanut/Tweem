@@ -27,7 +27,7 @@ npm start
 ## Configuration
 Before starting the bot, it is recommanded to take a look at the config file and to modify its values to match your liking.<br>
 Here are all the configuration possibilities:
-* **nodes:** list of RPC nodes to be used by the app
+* **nodes:** list of RPC nodes to be used by the app (those need to be full nodes, not low memory ones)
 * **settings:**
   * ***allowed_links:*** replace default 'steemit.com' links by the link from the posts' apps (default: true)
   * ***check_for_duplicate_tags:*** check for duplicate tags and remove them (default: true)

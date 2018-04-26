@@ -2,7 +2,7 @@
     "nodes": [
         "https://rpc.steemviz.com",
         "https://api.steemit.com",
-        "https://rpc.buildteam.io",
+        "https://gtg.steem.house:8090",
         "https://api.steem.house",
         "https://rpc.curiesteem.com"
     ],
