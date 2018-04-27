@@ -1,6 +1,6 @@
 {
   "name": "tweem",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "description": "A bot tweeting all the resteems and/or recent posts of specified accounts.",
   "main": "app.js",
   "scripts": {
@@ -25,5 +25,13 @@
   "engines": {
     "node": "8.6.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RagePeanut/Tweem.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RagePeanut/Tweem/issues"
+  },
+  "homepage": "https://github.com/RagePeanut/Tweem#readme"
 }
