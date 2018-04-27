@@ -22,17 +22,21 @@
             "utopian": true,
             "zappl": true
         },
-        "check_for_duplicate_tags": true,
-        "escape_starting_mention": true,
         "include_tags": true,
         "include_title": true,
-        "remove_mentions": false,
-        "remove_mentions_at_char": false,
-        "remove_tags_by_length": false,
-        "remove_tags_by_length_opposite": false,
-        "remove_tags_by_order": true,
-        "remove_tags_by_order_opposite": false,
-        "tag_limit": false,
+        "mentions": {
+            "escape_starting_mention": true,
+            "remove_mentions": false,
+            "remove_mentions_at_char": false
+        },
+        "tags": {
+            "check_for_duplicate": true,
+            "limit": false,
+            "remove_tags_by_length": false,
+            "remove_tags_by_length_opposite": false,
+            "remove_tags_by_order": true,
+            "remove_tags_by_order_opposite": false
+        },
         "tweet_posts": true,
         "tweet_resteems": true
     },

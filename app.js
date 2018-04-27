@@ -35,17 +35,17 @@ function stream() {
                 const op = JSON.parse(operation[1].json);
                 // Checking if it's a resteem and if it's from one of the specified accounts
                 if(op[0] === 'reblog' && steem_accounts.includes(op[1].account)) {
-                    treatOperation(op[1].author, op[1].permlink);
+                    treatOperation(op[1].author, op[1].permlink, op[0]);
                 }
             // Checking if it's a post (not a comment) made by one of the specified accounts
             } else if(settings.tweet_posts && operation[0] === 'comment' && steem_accounts.includes(operation[1].author) && operation[1].parent_author === '') {
-                treatOperation(operation[1].author, operation[1].permlink);
+                treatOperation(operation[1].author, operation[1].permlink, operation[0]);
             }
         });
     // If an error occured, add 1 to the index and put it at 0 if it is out of bound
     // Then relaunch the stream since it crashed
     }).catch(err => {
-        console.log('Stream error:', err.message, 'with', nodes[index]);
+        console.error('Stream error:', err.message, 'with', nodes[index]);
         index = ++index === nodes.length ? 0 : index;
         stream();
     });
@@ -54,8 +54,17 @@ function stream() {
 // Tweets the content of the message
 function tweet(message) {
     twitter.post('statuses/update', { status: message }, (err, data, response) => {
-        if(err) setTimeout(tweet, tweet_retry_timeout, message);
-        else console.log('Successfully tweeted', message);
+        if(err) {
+            // The tweet already exists
+            if(err.code === 187) console.error('Error: The tweet \'' + message + '\' already exists');
+            // Retry if it's another error
+            else {
+                console.error('Unknown error:', err.message);
+                console.log('Please notify @ragepeanut of the encountered error so it doesn\'t happen to other users')
+                console.log('Retrying...');
+                setTimeout(tweet, tweet_retry_timeout, message);
+            }
+        } else console.log('Successfully tweeted', message);
     });
 }
 
@@ -103,23 +112,24 @@ function getWebsite(app, author, permlink, url, tags, body) {
     }
 }
 
-function treatOperation(author, permlink) {
+function treatOperation(author, permlink, type) {
     // Getting the content of the post
     steem.api.getContent(author, permlink, (err, result) => {
         if(err) {
-            console.log(err.message, 'encountered while getting the content of /@' + author + '/' + permlink);
+            console.error(err.message, 'encountered while getting the content of /@' + author + '/' + permlink);
             console.log('Retrying...');
-            setTimeout(treatOperation, 5000, author, permlink);
-        } else {
+            setTimeout(treatOperation, 5000, author, permlink, type);
+        // If the operation is a comment operation, it must be a post creation, not a post update
+        } else if(type === 'reblog' || type === 'comment' && result.last_update === result.created) {
             let metadata;
             try {
                 metadata = JSON.parse(result.json_metadata);
                 if(!metadata) throw new Error('The metadata is ', metadata);
                 if(typeof metadata !== 'object') throw new Error('The metadata is of type ' + typeof metadata);
             } catch(err) {
-                console.log('Error:', err.message, 'with', author, 'and', permlink);
+                console.error('Error:', err.message, 'with', author, 'and', permlink);
                 console.log('Retrying...');
-                setTimeout(treatOperation, 5000, author, permlink);
+                setTimeout(treatOperation, 5000, author, permlink, type);
                 return;
             }
             let message = '';
@@ -127,18 +137,18 @@ function treatOperation(author, permlink) {
             if(settings.include_title) {
                 // Mentions
                 // If set to true, completely removes the mentions in the title (e.g. 'Hello @ragepeanut !' --> 'Hello !')
-                if(settings.remove_mentions) result.title = result.title.replace(/( )?@[a-zA-Z0-9._-]+( )?/g, (match, firstSpace, secondSpace) => { return firstSpace || secondSpace});
+                if(settings.mentions.remove_mentions) result.title = result.title.replace(/( )?@[a-zA-Z0-9._-]+( )?/g, (match, firstSpace, secondSpace) => { return firstSpace || secondSpace});
                 // If set to true, removes the @ character from mentions (e.g. 'Bye @ragepeanut !' --> 'Bye ragepeanut !')
-                else if(settings.remove_mentions_at_char) result.title = result.title.replace(/@([a-zA-Z0-9._-]+)/g, '$1');
+                else if(settings.mentions.remove_mentions_at_char) result.title = result.title.replace(/@([a-zA-Z0-9._-]+)/g, '$1');
                 // If set to true, escapes a mention if it is the first word of the title (e.g. '@ragepeanut isn\'t a real peanut :O' --> '.@ragepeanut isn\'t an real peanut :O')
-                else if(settings.escape_starting_mention && result.title[0] === '@') result.title = '.' + result.title;
+                else if(settings.mentions.escape_starting_mention && result.title[0] === '@') result.title = '.' + result.title;
                 message += result.title + ' ';
             }
             // Tags
             if(settings.include_tags) {
                 let tags = metadata.tags || [result.category];
                 // If set to true, removes any duplicate tag from the tags array
-                if(settings.check_for_duplicate_tags) {
+                if(settings.tags.check_for_duplicate) {
                     const tmpTags = [];
                     tags.forEach(tag => {
                         if(!tmpTags.includes(tag)) tmpTags.push(tag);
@@ -146,7 +156,7 @@ function treatOperation(author, permlink) {
                     tags = tmpTags;
                 }
                 // If set to an integer, takes only the X first tags
-                if(settings.tag_limit) tags = tags.slice(0, settings.tag_limit);
+                if(settings.tags.limit) tags = tags.slice(0, settings.tags.limit);
                 // Unshifting to put a # character in front of the first tag
                 tags.unshift('');
                 message += tags.reduce((accumulator, tag) => accumulator + '#' + tag + ' ');
@@ -155,26 +165,26 @@ function treatOperation(author, permlink) {
                     tags.shift();
                     let neededLength = message.length + LINK_LENGTH - MAX_TWEET_LENGTH;
                     // If set to true, removes tags by order of importance (last tag removed first)
-                    if(settings.remove_tags_by_order) {
+                    if(settings.tags.remove_tags_by_order) {
                         for(let i = tags.length - 1; i >= 0 && neededLength > 0; i--) {
                             message = message.replace('#' + tags[i] + ' ', '');
                             neededLength -= tags[i].length + 2;
                         }
                     // If set to true, removes tags by the opposite order of importance (first tag removed first)
-                    } else if(settings.remove_tags_by_order_opposite) {
+                    } else if(settings.tags.remove_tags_by_order_opposite) {
                         for(let i = 0; i < tags.length && neededLength > 0; i++) {
                             message = message.replace('#' + tags[i] + ' ', '');
                             neededLength -= tags[i].length + 2;
                         }
                     // If set to true, removes tags by length (smallest removed first)
-                    } else if(settings.remove_tags_by_length) {
+                    } else if(settings.tags.remove_tags_by_length) {
                         tags = tags.sort((a, b) => a.length - b.length);
                         for(let i = 0; i < tags.length && neededLength > 0; i++) {
                             message = message.replace('#' + tags[i] + ' ', '');
                             neededLength -= tags[i].length + 2;
                         }
                     // If set to true, removes tags by length (longest removed first)
-                    } else if(settings.remove_tags_by_length_opposite) {
+                    } else if(settings.tags.remove_tags_by_length_opposite) {
                         tags = tags.sort((a, b) => b.length - a.length);
                         for(let i = 0; i < tags.length && neededLength > 0; i++) {
                             message = message.replace('#' + tags[i] + ' ', '');
