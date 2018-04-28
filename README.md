@@ -23,6 +23,7 @@ npm install
 ```
 npm start
 ```
+**⚠⚠⚠** I recommand to wait at least one minute after the "Starting a new stream" message appears in the console before testing it if you don't want your post to get unnoticed by the bot. This is because "Starting a new stream" doesn't mean that the stream is operational yet but that's it's about to be.
 
 ## Configuration
 Before starting the bot, it is recommanded to take a look at the config file and to modify its values to match your liking.<br>
