@@ -1,7 +1,7 @@
 {
     "nodes": [
-        "https://rpc.steemviz.com",
         "https://api.steemit.com",
+        "https://rpc.steemviz.com",
         "https://gtg.steem.house:8090",
         "https://api.steem.house",
         "https://rpc.curiesteem.com"
@@ -41,7 +41,7 @@
         "tweet_resteems": true
     },
     "steem_accounts": [
-        "ragepeanut"
+        "nuttinghere"
     ],
     "tweet_retry_timeout": 10000
 }
