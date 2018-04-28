@@ -15,6 +15,9 @@ const MAX_TWEET_LENGTH = 280;
 // Twitter automatically replaces links by https://t.co/[A-Za-z\d]{10}
 const LINK_LENGTH = 23;
 
+// Contains the failed requests from previous nodes
+const failedRequests = [];
+
 let index = 0;
 
 // Launching the stream function
@@ -25,6 +28,11 @@ function stream() {
     // Setting the RPC node link based on the current index value
     steem.api.setOptions({ url: nodes[index] });
     return new Promise((resolve, reject) => {
+        while(failedRequests.length > 0) {
+            console.log('Taking care of a previously failed request...');
+            const post = failedRequests.shift();
+            treatOperation(post.author, post.permlink, post.type, reject);
+        }
         console.log('Starting a new stream with ' + nodes[index]);
         // Starting the steem operations stream
         steem.api.streamOperations((err, operation) => {
@@ -35,11 +43,11 @@ function stream() {
                 const op = JSON.parse(operation[1].json);
                 // Checking if it's a resteem and if it's from one of the specified accounts
                 if(op[0] === 'reblog' && steem_accounts.includes(op[1].account)) {
-                    treatOperation(op[1].author, op[1].permlink, op[0]);
+                    treatOperation(op[1].author, op[1].permlink, op[0], reject);
                 }
             // Checking if it's a post (not a comment) made by one of the specified accounts
             } else if(settings.tweet_posts && operation[0] === 'comment' && steem_accounts.includes(operation[1].author) && operation[1].parent_author === '') {
-                treatOperation(operation[1].author, operation[1].permlink, operation[0]);
+                treatOperation(operation[1].author, operation[1].permlink, operation[0], reject);
             }
         });
     // If an error occured, add 1 to the index and put it at 0 if it is out of bound
@@ -112,13 +120,12 @@ function getWebsite(app, author, permlink, url, tags, body) {
     }
 }
 
-function treatOperation(author, permlink, type) {
+function treatOperation(author, permlink, type, reject) {
     // Getting the content of the post
     steem.api.getContent(author, permlink, (err, result) => {
         if(err) {
-            console.error(err.message, 'encountered while getting the content of /@' + author + '/' + permlink);
-            console.log('Retrying...');
-            setTimeout(treatOperation, 5000, author, permlink, type);
+            failedRequests.push({author: author, permlink: permlink, type: type});
+            return reject(err);
         // If the operation is a comment operation, it must be a post creation, not a post update
         } else if(type === 'reblog' || type === 'comment' && result.last_update === result.created) {
             let metadata;
@@ -127,10 +134,8 @@ function treatOperation(author, permlink, type) {
                 if(!metadata) throw new Error('The metadata is ', metadata);
                 if(typeof metadata !== 'object') throw new Error('The metadata is of type ' + typeof metadata);
             } catch(err) {
-                console.error('Error:', err.message, 'with', author, 'and', permlink);
-                console.log('Retrying...');
-                setTimeout(treatOperation, 5000, author, permlink, type);
-                return;
+                failedRequests.push({author: author, permlink: permlink, type: type});
+                return reject(err);
             }
             let message = '';
             // Title
