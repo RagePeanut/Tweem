@@ -41,7 +41,7 @@
         "tweet_resteems": true
     },
     "steem_accounts": [
-        "nuttinghere"
+        "ragepeanut"
     ],
     "tweet_retry_timeout": 10000
 }
