@@ -1,4 +1,4 @@
-# Tweem (0.1.1)
+# Tweem (0.1.2)
 Tweem is a bot that automatically tweets all the resteems and/or recent posts of specified accounts.
 
 ## Deploy
