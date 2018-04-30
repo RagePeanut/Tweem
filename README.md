@@ -1,4 +1,4 @@
-# Tweem (0.1.2)
+# Tweem (0.1.3)
 Tweem is a bot that automatically tweets all the resteems and/or recent posts of specified accounts.
 
 ## Deploy
@@ -27,7 +27,7 @@ npm start
 ## Configuration
 Before starting the bot, it is recommanded to take a look at the config file and to modify its values to match your liking.<br>
 Here are all the configuration possibilities:
-* **nodes:** list of RPC nodes to be used by the app (those need to be full nodes, not low memory ones)
+* **request_nodes:** list of RPC nodes to be used by the app to get posts informations (those need to be full nodes)
 * **settings:**
   * ***allowed_links:*** replace default 'steemit.com' links by the link from the posts' apps (default: true)
   * ***include_tags:*** include tags in tweets (default: true)
@@ -46,6 +46,7 @@ Here are all the configuration possibilities:
   * ***tweet_posts:*** tweet posts from the specified accounts (default: true)
   * ***tweet_resteems:*** tweet resteems from the specified accounts (default: true)
 * **steem_accounts:** list of Steem accounts to watch (default: ['ragepeanut'])
+* **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
 * **tweet_retry_timeout:** time in milliseconds to wait for before retrying to tweet if it failed (default: 10000)
 
 ## Special thanks to

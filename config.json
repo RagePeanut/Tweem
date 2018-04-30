@@ -1,7 +1,6 @@
 {
-    "nodes": [
+    "request_nodes": [
         "https://api.steemit.com",
-        "https://rpc.steemviz.com",
         "https://gtg.steem.house:8090",
         "https://api.steem.house",
         "https://rpc.curiesteem.com"
@@ -42,6 +41,11 @@
     },
     "steem_accounts": [
         "ragepeanut"
+    ],
+    "stream_nodes": [
+        "https://rpc.buildteam.io",
+        "https://rpc.steemviz.com",
+        "https://steemd.minnowsupportproject.org"
     ],
     "tweet_retry_timeout": 10000
 }
