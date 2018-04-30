@@ -73,7 +73,7 @@ function tweet(message) {
 // Gets the website from which the post has been made if it can view posts
 function getWebsite(app, author, permlink, url, tags, body) {
     // If the app is steemit or linking to posts on the app is not allowed/supported, the post is treated as a steemit post
-    // Apps that get a steemit.com link: steemit, chainbb, esteem, masdacs, steemauto, steempress, postpromoter, Steem Harry Games, vote-buyer, steemjs, piston-lib, undefined
+    // Apps that get a steemit.com link: steemit, dbooks, chainbb, esteem, masdacs, steemauto, steempress, postpromoter, Steem Harry Games, vote-buyer, steemjs, piston-lib, undefined
     // The list of supported apps is manually updated. If an app is missing, please contact me through any of the means specified in the README file or send a new issue
     if(!settings.allowed_links[app]) return 'steemit.com' + url;
     switch(app) {
@@ -97,6 +97,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'steemhunt.com/@' + author + '/' + permlink;
         case 'parley':
             return 'parley.io/thread/' + author + '/' + permlink;
+        case 'memeit.lol':
+            return 'memeit.lol/@' + author + '/' + permlink;
         case 'steemkr':
             return 'steemkr.com' + url;
         case 'bescouted':
@@ -131,7 +133,7 @@ function treatOperation(author, permlink, type) {
                 }
                 let message = '';
                 // Title
-                if(settings.include_title) {
+                if(settings.include_title && result.title.length > 0) {
                     // Mentions
                     // If set to true, completely removes the mentions in the title (e.g. 'Hello @ragepeanut !' --> 'Hello !')
                     if(settings.mentions.remove_mentions) result.title = result.title.replace(/( )?@[a-zA-Z0-9._-]+( )?/g, (match, firstSpace, secondSpace) => { return firstSpace || secondSpace});
@@ -156,7 +158,7 @@ function treatOperation(author, permlink, type) {
                     if(settings.tags.limit) tags = tags.slice(0, settings.tags.limit);
                     // Unshifting to put a # character in front of the first tag
                     tags.unshift('');
-                    message += tags.reduce((accumulator, tag) => accumulator + '#' + tag + ' ');
+                    message += tags.reduce((accumulator, tag) => tag.length > 0 ? accumulator + '#' + tag + ' ' : accumulator);
                     // Checking if the message is going to be longer than the maximum length
                     if(message.length + LINK_LENGTH > MAX_TWEET_LENGTH) {
                         tags.shift();
