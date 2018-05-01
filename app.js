@@ -95,6 +95,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'alpha.steepshot.io/post/@' + author + '/' + permlink;
         case 'steemhunt':
             return 'steemhunt.com/@' + author + '/' + permlink;
+        case 'oneplace':
+            return 'oneplace.media/s/@' + author + '/' + permlink;
         case 'parley':
             return 'parley.io/thread/' + author + '/' + permlink;
         case 'memeit.lol':
