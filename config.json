@@ -22,8 +22,6 @@
             "utopian": true,
             "zappl": true
         },
-        "include_tags": true,
-        "include_title": true,
         "mentions": {
             "escape_starting_mention": true,
             "remove_mentions": false,
@@ -37,6 +35,7 @@
             "remove_tags_by_order": true,
             "remove_tags_by_order_opposite": false
         },
+        "template": "{{title::2}} %%by @{{author}}::1%% {{tags::3}}",
         "tweet_posts": true,
         "tweet_resteems": true
     },

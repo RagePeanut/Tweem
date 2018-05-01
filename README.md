@@ -1,4 +1,4 @@
-# Tweem (0.1.3)
+# Tweem (0.1.4)
 Tweem is a bot that automatically tweets all the resteems and/or recent posts of specified accounts.
 
 ## Deploy
@@ -31,8 +31,6 @@ Here are all the configuration possibilities:
 * **request_nodes:** list of RPC nodes to be used by the app to get posts informations (those need to be full nodes)
 * **settings:**
   * ***allowed_links:*** replace default 'steemit.com' links by the link from the posts' apps (default: true)
-  * ***include_tags:*** include tags in tweets (default: true)
-  * ***include_title:*** include title in tweets (default: true)
   * ***mentions:***
     * ***escape_starting_mention:*** escape a mention by adding a '.' in front of it if it is the first word of a tweet (default: true)
     * ***remove_mentions:*** remove mentions completely (default: false)
@@ -48,7 +46,30 @@ Here are all the configuration possibilities:
   * ***tweet_resteems:*** tweet resteems from the specified accounts (default: true)
 * **steem_accounts:** list of Steem accounts to watch (default: ['ragepeanut'])
 * **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
+* **template:** template for the tweet (explained in 'Create your own template')
 * **tweet_retry_timeout:** time in milliseconds to wait for before retrying to tweet if it failed (default: 10000)
+
+## Create your own template
+**Tweems** aims to be the most configurable sharing bot on the **Steem** blockchain, that's why you can change how your tweets will look by changing their template. Let's take a look at the default template to understand what's happening.
+```
+{{title::2}} %%by @{{author}}::1%% {{tags::3}}
+```
+Every part of the tweet (except the 'by' part) is defined by `{{DATA::IMPORTANCE}}`, `DATA` is the data indicator, it can be replaced by 'title' or 'tags'. You can't have the same data indicator twice in a template. `IMPORTANCE` is a number that specifies how important this part of the tweet is. If a message is too long to be twitted (more than 280 characters), the part of the tweet that has the lowest `IMPORTANCE` number will get changed to fit the maximum message length. The `%%by @{{author}}::1%%` may be the hardest part of this template to understand, it corresponds to the 'by' part of the tweet and will only be in the tweet when you resteem a post. It is defined by `%%TEXT{{author}}TEXT::IMPORTANCE%%`. `TEXT` is any piece of text you would like to see in the tweet, `{{author}}` is the author username (right now, 'author' is the only value you can put between these curly brackets) and `IMPORTANCE` has already been explained before. You can only put on 'by' part in your template. The link is not defined in the template, that's because it must always be at the end of the tweet for **Twitter** to handle it well. Here are a few examples along with their expected results to help you understand how the templating works.
+* `{{title::2}} %%by @{{author}}::1%% {{tags::3}}`<br>
+**Post:** `TITLE TAGS`<br>
+**Resteem:** `TITLE by @AUTHOR TAGS`
+
+* `%%I just resteemed ::1%%{{title::2}} {{tags::3}}`<br>
+**Post:** `TITLE TAGS`<br>
+**Resteem:** `I just resteemed TITLE TAGS`
+
+* `{{title::2}} %%by {{author}} was amazing!::1%%`<br>
+**Post:** `TITLE`<br>
+**Resteem:** `TITLE by AUTHOR was amazing!`
+
+* `Check this post out! {{tags::1}}`<br>
+**Post:** `Check this post out! TAGS`<br>
+**Resteem:** `Check this post out! TAGS`
 
 ## Special thanks to
 **Steemit** for [steem.js](https://github.com/steemit/steem-js)<br>
@@ -57,7 +78,7 @@ Here are all the configuration possibilities:
 ## Social networks
 **Steemit:** https://steemit.com/@ragepeanut <br>
 **Busy:** https://busy.org/@ragepeanut <br>
-**Twitter:** https://twitter.com/RagePeanut_ <br>
+**Twitter:** [https://twitter.com/RagePeanut_](https://twitter.com/RagePeanut_) <br>
 **Steam:** http://steamcommunity.com/id/ragepeanut/
 
 ### Follow me on [Steemit](https://steemit.com/@ragepeanut) or [Busy](https://busy.org/@ragepeanut) to be informed on my new releases and projects.
