@@ -8,9 +8,9 @@
     "settings": {
         "allowed_links": {
             "bescouted": true,
+            "blockdeals": true,
             "busy": true,
             "dlive": true,
-            "dmania": true,
             "dsound": true,
             "dtube": true,
             "fundition": true,
@@ -19,6 +19,7 @@
             "parley": true,
             "steemhunt": true,
             "steemkr": true,
+            "steemthink": true,
             "steepshot": true,
             "utopian": true,
             "zappl": true

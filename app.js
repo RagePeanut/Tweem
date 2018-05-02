@@ -77,42 +77,44 @@ function getWebsite(app, author, permlink, url, tags, body) {
     // The list of supported apps is manually updated. If an app is missing, please contact me through any of the means specified in the README file or send a new issue
     if(!settings.allowed_links[app]) return 'steemit.com' + url;
     switch(app) {
-        case 'fundition':
-            return 'fundition.io/#!/@' + author + '/' + permlink;
-        case 'busy':
-            return 'busy.org/@' + author + '/' + permlink;
-        case 'utopian':
-            return 'utopian.io' + url;
-        case 'dtube':
-            return 'd.tube/#!/v/' + author + '/' + permlink;
-        case 'dsound':
-            return 'dsound.audio/#!/@' + author + '/' + permlink;
-        case 'dmania':
-            return 'dmania.lol/post/' + author + '/' + permlink;
-        case 'zappl':
-            return 'zappl.com/' + url.split('/')[1] + '/' + author + '/' + permlink;
-        case 'steepshot':
-            return 'alpha.steepshot.io/post/@' + author + '/' + permlink;
-        case 'steemhunt':
-            return 'steemhunt.com/@' + author + '/' + permlink;
-        case 'oneplace':
-            return 'oneplace.media/s/@' + author + '/' + permlink;
-        case 'parley':
-            return 'parley.io/thread/' + author + '/' + permlink;
-        case 'memeit.lol':
-            return 'memeit.lol/@' + author + '/' + permlink;
-        case 'steemkr':
-            return 'steemkr.com' + url;
         case 'bescouted':
             // Bescouted links don't follow the Steem apps logic, therefore the link has to be fetched from the body
             // If the user removed the website link, the post is treated as a steemit post
             return body.match(/\(?:https:\/\/www\.(bescouted\.com\/photo\/\d{8,}\/[\w-]+\/\d{8,})\/\)/)[0] || 'steemit.com' + url;
+        case 'blockdeals':
+            return 'blockdeals.org' + url;
+        case 'busy':
+            return 'busy.org/@' + author + '/' + permlink;
         case 'dlive':
             // Links for videos and livestreams don't have the same structure, the only way to check which one the post is is to check the post tags
             // DLive automatically transforms livestream links to video links when accessed once the livestream ended so the app doesn't have to check for that
             if(tags.includes('dlive-broadcast')) return 'dlive.io/livestream/' + author + '/' + permlink;
             if(tags.includes('dlive-video')) return 'dlive.io/video/' + author + '/' + permlink;
             // If the user changed the identifying tag, the post is treated as a steemit post
+        case 'dsound':
+            return 'dsound.audio/#!/@' + author + '/' + permlink;
+        case 'dtube':
+            return 'd.tube/#!/v/' + author + '/' + permlink;
+        case 'fundition':
+            return 'fundition.io/#!/@' + author + '/' + permlink;
+        case 'memeit.lol':
+            return 'memeit.lol/@' + author + '/' + permlink;
+        case 'oneplace':
+            return 'oneplace.media/s/@' + author + '/' + permlink;
+        case 'parley':
+            return 'parley.io/thread/' + author + '/' + permlink;
+        case 'steemhunt':
+            return 'steemhunt.com/@' + author + '/' + permlink;
+        case 'steemkr':
+            return 'steemkr.com' + url;
+        case 'steemthink':
+            return 'steemthink.com/#!/detail/' + author + '/' + permlink;
+        case 'steepshot':
+            return 'alpha.steepshot.io/post/@' + author + '/' + permlink;
+        case 'utopian':
+            return 'utopian.io' + url;
+        case 'zappl':
+            return 'zappl.com/' + url.split('/')[1] + '/' + author + '/' + permlink;
         default:
             return 'steemit.com' + url;
     }
