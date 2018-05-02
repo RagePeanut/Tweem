@@ -35,11 +35,11 @@ function stream() {
             if(settings.tweet_resteems && operation[0] === 'custom_json') {
                 const op = JSON.parse(operation[1].json);
                 // Checking if it's a resteem and if it's from one of the specified accounts
-                if(op[0] === 'reblog' && steem_accounts.includes(op[1].account)) {
+                if(op[0] === 'reblog' && steem_accounts.resteems.includes(op[1].account)) {
                     treatOperation(op[1].author, op[1].permlink, op[0]);
                 }
             // Checking if it's a post (not a comment) made by one of the specified accounts
-            } else if(settings.tweet_posts && operation[0] === 'comment' && steem_accounts.includes(operation[1].author) && operation[1].parent_author === '') {
+            } else if(settings.tweet_posts && operation[0] === 'comment' && steem_accounts.posts.includes(operation[1].author) && operation[1].parent_author === '') {
                 treatOperation(operation[1].author, operation[1].permlink, operation[0]);
             }
         });

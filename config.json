@@ -40,9 +40,14 @@
         "tweet_posts": true,
         "tweet_resteems": true
     },
-    "steem_accounts": [
-        "ragepeanut"
-    ],
+    "steem_accounts": {
+        "posts": [
+            "ragepeanut"
+        ],
+        "resteems": [
+            "ragepeanut"
+        ]
+    },
     "stream_nodes": [
         "https://rpc.buildteam.io",
         "https://rpc.steemviz.com",

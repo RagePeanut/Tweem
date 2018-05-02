@@ -44,7 +44,7 @@ Here are all the configuration possibilities:
     * ***remove_tags_by_order_opposite:*** remove tags by their opposite order of importance (first tags removed first) if the tweet is too long (default: false)
   * ***tweet_posts:*** tweet posts from the specified accounts (default: true)
   * ***tweet_resteems:*** tweet resteems from the specified accounts (default: true)
-* **steem_accounts:** list of Steem accounts to watch (default: ['ragepeanut'])
+* **steem_accounts:** lists of Steem accounts to react to when they post (posts) and/or when they resteem (resteems) (default: ['ragepeanut'] and ['ragepeanut'])
 * **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
 * **template:** template for the tweet (explained in 'Create your own template')
 * **tweet_retry_timeout:** time in milliseconds to wait for before retrying to tweet if it failed (default: 10000)
