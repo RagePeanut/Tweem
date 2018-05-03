@@ -97,8 +97,12 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'd.tube/#!/v/' + author + '/' + permlink;
         case 'fundition':
             return 'fundition.io/#!/@' + author + '/' + permlink;
+        case 'hede':
+            return 'hede.io' + url;
         case 'memeit.lol':
             return 'memeit.lol/@' + author + '/' + permlink;
+        case 'mTasks':
+            return 'steemmtask.herokuapp.com/@' + author + '/' + permlink;
         case 'oneplace':
             return 'oneplace.media/s/@' + author + '/' + permlink;
         case 'parley':
