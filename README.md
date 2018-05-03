@@ -31,7 +31,7 @@ Here are all the configuration possibilities:
 * **request_nodes:** list of RPC nodes to be used by the app to get posts informations (those need to be full nodes)
 * **settings:**
   * ***allowed_apps:*** lets you decide how posts from various apps will be linked (0: not tweeted, 1: tweeted with a link to the post on the *default_app*, 2: tweeted with a link to the post on the app it comes from)
-  * ***default_app:*** default app to be used when an app is not yet supported or has been set to 1 in *allowed_apps*
+  * ***default_app:*** default app to be used when an app is not yet supported or has been set to 1 in *allowed_apps*. The value has to correspond to one of the labels in the supported apps table below.
   * ***mentions:***
     * ***escape_starting_mention:*** escape a mention by adding a '.' in front of it if it is the first word of a tweet (default: true)
     * ***remove_mentions:*** remove mentions completely (default: false)
@@ -72,6 +72,33 @@ Every part of the tweet (except the 'by' part) is defined by `{{DATA::IMPORTANCE
 * `Check this post out! {{tags::1}}`<br>
 **Post:** `Check this post out! TAGS`<br>
 **Resteem:** `Check this post out! TAGS`
+
+## Supported apps
+Website | Label | Official description | Posting | Viewing
+-|-|-|:-:|:-:
+**[BeScouted](https://www.bescouted.com/)** | bescouted | Photography community that rewards for creating quality content. | **✓** | ✓
+**[BlockDeals](https://blockdeals.org/)** | blockdeals | A Community Platform for Bargain Hunters and Deal Spotters. | **✓** | ✓ 
+**[Busy](https://busy.org/)** | busy | Ensuring compensation for the creators of value. | **✓** | **✓**
+**[DLive](https://www.dlive.io/#/)** | dlive | The first decentralized live streaming and video platform for you to share original content, and earn feeless rewards directly from your viewers. | **✓** | ✓
+**[DSound](https://dsound.audio/)** | dsound | Decentralized Sound Platform. | **✓** | ✓
+**[DTube](https://d.tube/)** | dtube | The first crypto-decentralized video platform, built on top of the **STEEM** Blockchain and the **IPFS** peer-to-peer network. | **✓** | ✓
+**[Fundition](https://fundition.io/)** | fundition | A next-generation, decentralized, peer-to-peer crowdfunding and collaboration platform. | **✓** | ✓
+**[Hede](https://hede.io/)** | hede | Knowledge Sharing Dictionary. | **✓** | ✓
+**[Insteem](https://www.insteem.com/)** | insteem | Decentralized News by Independent Journalists. | ✗ | **✓**
+**[Memeit.LOL](https://memeit.lol/)** | memeit.lol | A creative platform you can use to create your own meme and post it on the Steem Blockchain. | **✓** | ✓
+**[mTasks](https://steemmtask.herokuapp.com/)** | mTasks | A Fiverr like platform built on top of **STEEM** Blockchain. | **✓** | ✓
+**[OnePlace](https://oneplace.media/)** | oneplace | Web-application based on Steem and Golos blockchains. | **✓** | **✓** 
+**[Parley](https://www.parley.io/)** | parley | The place where conversations happen. | **✓** | ✓
+**[Steemd](https://steemit.com)** | steemd | A blockchain explorer for the **STEEM** blockchain. | ✗ | **✓**
+**[SteemDB](https://steemdb.com/)** | steemdb | Block explorer and database for the **STEEM** blockchain. | ✗ | **✓**
+**[Steemhunt](https://steemhunt.com/)** | steemhunt | A Steem Fueled Product Hunt. | **✓** | ✓
+**[Steemit](https://steemit.com/)** | steemit | A social media platform where everyone gets paid for creating and curating content. | **✓** | **✓**
+**[SteemKR](https://steemkr.com/)** | steemkr | Korean version of **Steemit**. | **✓** | **✓**
+**[Steepshot](https://steepshot.io/)** | steepshot | Platform that rewards people for sharing their lifestyle and visual experience. | **✓** | ✓
+**[Utopian](https://utopian.io/)** | utopian | Rewarding Open Source Contributors. | **✓** | ✓
+**[Zappl](https://zappl.com/)** | zappl | Decentralized censorship resistant micro blogging Social Media site that pays. | **✓** | ✓
+
+If you are working on a website that you feel should be in this list, let me know by contact me through on of my social networks listed below ! I'll add it as soon as possible.
 
 ## Special thanks to
 **Steemit** for [steem.js](https://github.com/steemit/steem-js)<br>
