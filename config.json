@@ -58,5 +58,6 @@
         "https://rpc.steemviz.com",
         "https://steemd.minnowsupportproject.org"
     ],
-    "tweet_retry_timeout": 10000
+    "tweet_retry_timeout": 10000,
+    "twitter_handle": "RagePeanut_"
 }

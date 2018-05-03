@@ -1,4 +1,4 @@
-# Tweem (0.1.4)
+# Tweem (0.1.5)
 Tweem is a bot that automatically tweets all the resteems and/or recent posts of specified accounts.
 
 ## Deploy
@@ -49,6 +49,7 @@ Here are all the configuration possibilities:
 * **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
 * **template:** template for the tweet (explained in 'Create your own template')
 * **tweet_retry_timeout:** time in milliseconds to wait for before retrying to tweet if it failed (default: 10000)
+* **twitter_handle:** the **Twitter** handle used by the bot, aka your **Twitter** handle (default: 'RagePeanut_')
 
 ## Create your own template
 **Tweems** aims to be the most configurable sharing bot on the **Steem** blockchain, that's why you can change how your tweets will look by changing their template. Let's take a look at the default template to understand what's happening.

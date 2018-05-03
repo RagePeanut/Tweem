@@ -2,7 +2,7 @@ const Twit = require('twit');
 const steemStream = require('steem');
 const steemRequest = require('steem');
 
-const { request_nodes, settings, steem_accounts, stream_nodes, tweet_retry_timeout } = require('./config');
+const { request_nodes, settings, steem_accounts, stream_nodes, tweet_retry_timeout, twitter_handle } = require('./config');
 
 const twitter = new Twit({
     consumer_key: process.env.CONSUMER_KEY,
@@ -36,11 +36,15 @@ function stream() {
                 const op = JSON.parse(operation[1].json);
                 // Checking if it's a resteem and if it's from one of the specified accounts
                 if(op[0] === 'reblog' && steem_accounts.resteems.includes(op[1].account)) {
-                    treatOperation(op[1].author, op[1].permlink, op[0]);
+                    isAlreadyTweeted(op[1].author, op[1].permlink)
+                        .then(alreadyTweeted => !alreadyTweeted && treatOperation(op[1].author, op[1].permlink, op[0]))
+                        .catch(err => console.err('Twitter search API error:', err.message));
                 }
             // Checking if it's a post (not a comment) made by one of the specified accounts
             } else if(settings.tweet_posts && operation[0] === 'comment' && steem_accounts.posts.includes(operation[1].author) && operation[1].parent_author === '') {
-                treatOperation(operation[1].author, operation[1].permlink, operation[0]);
+                isAlreadyTweeted(operation[1].author, operation[1].permlink)
+                    .then(alreadyTweeted => !alreadyTweeted && treatOperation(operation[1].author, operation[1].permlink, operation[0]))
+                    .catch(err => console.error('Twitter search API error:', err.message));
             }
         });
     // If an error occured, add 1 to the index and put it at 0 if it is out of bound
@@ -67,6 +71,16 @@ function tweet(message) {
                 setTimeout(tweet, tweet_retry_timeout, message);
             }
         } else console.log('Successfully tweeted', message);
+    });
+}
+
+// Checks if the link has already been tweeted in the last 7 days
+function isAlreadyTweeted(author, permlink) {
+    return new Promise((resolve, reject) => {
+        twitter.get('search/tweets', { q: 'from:' + twitter_handle + ' url:' + author + ' url:' + permlink }, (err, data, response) => {
+            if(err) return reject(err);
+            resolve(data.statuses.length > 0);
+        });
     });
 }
 
