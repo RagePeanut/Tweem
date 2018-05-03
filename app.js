@@ -72,10 +72,8 @@ function tweet(message) {
 
 // Gets the website from which the post has been made if it can view posts
 function getWebsite(app, author, permlink, url, tags, body) {
-    // If the app is steemit or linking to posts on the app is not allowed/supported, the post is treated as a steemit post
-    // Apps that get a steemit.com link: steemit, dbooks, chainbb, esteem, masdacs, steemauto, steempress, postpromoter, Steem Harry Games, vote-buyer, steemjs, piston-lib, undefined
-    // The list of supported apps is manually updated. If an app is missing, please contact me through any of the means specified in the README file or send a new issue
-    if(!settings.allowed_links[app]) return 'steemit.com' + url;
+    if(!settings.allowed_apps[app]) return null;
+    else if(settings.allowed_apps[app] === 1) app = settings.default_app;
     switch(app) {
         case 'bescouted':
             // Bescouted links don't follow the Steem apps logic, therefore the link has to be fetched from the body
@@ -99,6 +97,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'fundition.io/#!/@' + author + '/' + permlink;
         case 'hede':
             return 'hede.io' + url;
+        case 'insteem':
+            return 'www.insteem.com/stories/' + author + '/' + permlink;
         case 'memeit.lol':
             return 'memeit.lol/@' + author + '/' + permlink;
         case 'mTasks':
@@ -107,6 +107,10 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'oneplace.media/s/@' + author + '/' + permlink;
         case 'parley':
             return 'parley.io/thread/' + author + '/' + permlink;
+        case 'steemd':
+            return 'steemd.com' + url;
+        case 'steemdb':
+            return 'steemdb.com' + url;
         case 'steemhunt':
             return 'steemhunt.com/@' + author + '/' + permlink;
         case 'steemkr':
@@ -119,6 +123,9 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'utopian.io' + url;
         case 'zappl':
             return 'zappl.com/' + url.split('/')[1] + '/' + author + '/' + permlink;
+        // If the app specified in settings.default_app doesn't exist, doesn't support viewing posts, isn't yet supported or isn't correctly written, use Steemit for the link
+        // Apps that get a steemit.com link: steemit, dbooks, chainbb, esteem, masdacs, steemauto, steempress, postpromoter, Steem Harry Games, vote-buyer, steemjs, piston-lib, undefined
+        // The list of supported apps is manually updated. If an app is missing, please contact me through any of the means specified in the README file or send a new issue
         default:
             return 'steemit.com' + url;
     }
@@ -139,112 +146,114 @@ function treatOperation(author, permlink, type) {
                 } catch(err) {
                     return reject(err);
                 }
-
-                const regex = /{{([^{]+)::(\d+)}}|%%(.+)::(\d+)%%/g;
-                const message = {
-                    by: {
-                        content: '',
-                        importance: 0
-                    },
-                    tags: {
-                        arr: [],
-                        content: '',
-                        importance: 0
-                    },
-                    title: {
-                        content: '',
-                        importance: 0
+                // First parameter (app): checking for all the known ways of specifying an app, if none of them exists the app is set to undefined
+                const website = getWebsite(metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined, result.author, result.permlink, result.url, metadata.tags, result.body);
+                // If tweeting has been allowed for posts from this website
+                if(website) {
+                    const regex = /{{([^{]+)::(\d+)}}|%%(.+)::(\d+)%%/g;
+                    const message = {
+                        by: {
+                            content: '',
+                            importance: 0
+                        },
+                        tags: {
+                            arr: [],
+                            content: '',
+                            importance: 0
+                        },
+                        title: {
+                            content: '',
+                            importance: 0
+                        }
                     }
-                }
-                let messageLength = LINK_LENGTH + settings.template.replace(regex, '').length;
-                let match;
-                console.log(message.tags.content);
-                while(match = regex.exec(settings.template)) {
-                    switch(match[1] || match[3]) {
-                        case 'tags':
-                            message.tags.importance = parseInt(match[2]);
-                            let tags = metadata.tags || [match.category];
-                            // If set to true, removes any duplicate tag from the tags array
-                            if(settings.tags.check_for_duplicate) {
-                                const tmpTags = [];
-                                tags.forEach(tag => {
-                                    if(!tmpTags.includes(tag)) tmpTags.push(tag);
-                                });
-                                tags = tmpTags;
-                            }
-                            // If set to an integer, takes only the X first tags
-                            if(settings.tags.limit) tags = tags.slice(0, settings.tags.limit);
-                            message.tags.arr = tags;
-                            message.tags.content = tags.map(tag => '#' + tag).join(' ');
-                            messageLength += message.tags.content.length;
-                            break;
-                        case 'title':
-                            message.title.importance = parseInt(match[2]);
-                            message.title.content = result.title;
-                            // Mentions
-                            // If set to true, completely removes the mentions in the title (e.g. 'Hello @ragepeanut !' --> 'Hello !')
-                            if(settings.mentions.remove_mentions) message.title.content = message.title.content.replace(/( )?@[a-zA-Z0-9._-]+( )?/g, (match, firstSpace, secondSpace) => firstSpace || secondSpace);
-                            // If set to true, removes the @ character from mentions (e.g. 'Bye @ragepeanut !' --> 'Bye ragepeanut !')
-                            else if(settings.mentions.remove_mentions_at_char) message.title.content = message.title.content.replace(/@([a-zA-Z0-9._-]+)/g, '$1');
-                            // If set to true, escapes a mention if it is the first word of the title (e.g. '@ragepeanut isn\'t a real peanut :O' --> '.@ragepeanut isn\'t an real peanut :O')
-                            else if(settings.mentions.escape_starting_mention && message.title.content[0] === '@') message.title.content = '.' + message.title.content;
-                            messageLength += message.title.content.length;
-                            break;
-                        default:
-                            message.by.importance = parseInt(match[4]);
-                            if(type === 'reblog') {
-                                message.by.content = match[3].replace(/{{([^{]+)}}/g, (match, variable) => {
-                                    try {
-                                        return eval(variable);
-                                    } catch(err) {
-                                        console.err('Error: the variable \'' + variable + '\' doesn\'t exist. Treating it as a string.');
-                                        return '{{' + variable + '}}';
-                                    }
-                                });
-                                messageLength += message.by.content.length;
-                            }
-                    }
-                };
-                const leastToMostImportant = Object.keys(message).sort((a, b) => message[b].importance < message[a].importance);
-                while(messageLength > MAX_TWEET_LENGTH && leastToMostImportant.length > 0) {
-                    const part = leastToMostImportant.shift();
-                    let neededLength = messageLength - MAX_TWEET_LENGTH;
-                    switch(part) {
-                        case 'by':
-                            messageLength -= message.by.content.length;
-                            message.by.content = '';
-                            break;
-                        case 'tags':
-                            let removalOrder = message.tags.arr.slice(0);
-                            // If set to true, removes tags by order of importance (last tag removed first)
-                            if(settings.tags.remove_tags_by_order) removalOrder.reverse();
-                            // If set to true, removes tags by length (smallest removed first)
-                            else if(settings.tags.remove_tags_by_length) removalOrder.sort((a, b) => a.length - b.length);
-                            // If set to true, removes tags by length (longest removed first)
-                            else if(settings.tags.remove_tags_by_length_opposite) removalOrder.sort((a, b) => b.length - a.length);
-                            // If set to true, removes tags by the opposite order of importance (first tag removed first)
-                            // If set to false, don't remove any tag
-                            else if(!settings.tags.remove_tags_by_order_opposite) removalOrder = [];
-                            while(neededLength > 0 && removalOrder.length > 0) {
-                                const toRemove = removalOrder.shift();
-                                message.tags.arr.splice(message.tags.arr.findIndex(tag => tag === toRemove), 1);
-                                messageLength -= message.tags.content.length;
-                                message.tags.content = message.tags.arr.map(tag => '#' + tag).join(' ');
+                    let messageLength = LINK_LENGTH + settings.template.replace(regex, '').length;
+                    let match;
+                    while(match = regex.exec(settings.template)) {
+                        switch(match[1] || match[3]) {
+                            case 'tags':
+                                message.tags.importance = parseInt(match[2]);
+                                let tags = metadata.tags || [match.category];
+                                // If set to true, removes any duplicate tag from the tags array
+                                if(settings.tags.check_for_duplicate) {
+                                    const tmpTags = [];
+                                    tags.forEach(tag => {
+                                        if(!tmpTags.includes(tag)) tmpTags.push(tag);
+                                    });
+                                    tags = tmpTags;
+                                }
+                                // If set to an integer, takes only the X first tags
+                                if(settings.tags.limit) tags = tags.slice(0, settings.tags.limit);
+                                message.tags.arr = tags;
+                                message.tags.content = tags.map(tag => '#' + tag).join(' ');
                                 messageLength += message.tags.content.length;
-                                neededLength = messageLength - MAX_TWEET_LENGTH;
-                            }
-                            break;
-                        default:
-                            message.title.content = message.title.content.substr(0, message.title.content.length - neededLength - 3) + '...';
-                            messageLength -= neededLength;
-                            break;
+                                break;
+                            case 'title':
+                                message.title.importance = parseInt(match[2]);
+                                message.title.content = result.title;
+                                // Mentions
+                                // If set to true, completely removes the mentions in the title (e.g. 'Hello @ragepeanut !' --> 'Hello !')
+                                if(settings.mentions.remove_mentions) message.title.content = message.title.content.replace(/( )?@[a-zA-Z0-9._-]+( )?/g, (match, firstSpace, secondSpace) => firstSpace || secondSpace);
+                                // If set to true, removes the @ character from mentions (e.g. 'Bye @ragepeanut !' --> 'Bye ragepeanut !')
+                                else if(settings.mentions.remove_mentions_at_char) message.title.content = message.title.content.replace(/@([a-zA-Z0-9._-]+)/g, '$1');
+                                // If set to true, escapes a mention if it is the first word of the title (e.g. '@ragepeanut isn\'t a real peanut :O' --> '.@ragepeanut isn\'t an real peanut :O')
+                                else if(settings.mentions.escape_starting_mention && message.title.content[0] === '@') message.title.content = '.' + message.title.content;
+                                messageLength += message.title.content.length;
+                                break;
+                            default:
+                                message.by.importance = parseInt(match[4]);
+                                if(type === 'reblog') {
+                                    message.by.content = match[3].replace(/{{([^{]+)}}/g, (match, variable) => {
+                                        try {
+                                            return eval(variable);
+                                        } catch(err) {
+                                            console.err('Error: the variable \'' + variable + '\' doesn\'t exist. Treating it as a string.');
+                                            return '{{' + variable + '}}';
+                                        }
+                                    });
+                                    messageLength += message.by.content.length;
+                                }
+                        }
+                    };
+                    const leastToMostImportant = Object.keys(message).sort((a, b) => message[b].importance < message[a].importance);
+                    while(messageLength > MAX_TWEET_LENGTH && leastToMostImportant.length > 0) {
+                        const part = leastToMostImportant.shift();
+                        let neededLength = messageLength - MAX_TWEET_LENGTH;
+                        switch(part) {
+                            case 'by':
+                                messageLength -= message.by.content.length;
+                                message.by.content = '';
+                                break;
+                            case 'tags':
+                                let removalOrder = message.tags.arr.slice(0);
+                                // If set to true, removes tags by order of importance (last tag removed first)
+                                if(settings.tags.remove_tags_by_order) removalOrder.reverse();
+                                // If set to true, removes tags by length (smallest removed first)
+                                else if(settings.tags.remove_tags_by_length) removalOrder.sort((a, b) => a.length - b.length);
+                                // If set to true, removes tags by length (longest removed first)
+                                else if(settings.tags.remove_tags_by_length_opposite) removalOrder.sort((a, b) => b.length - a.length);
+                                // If set to true, removes tags by the opposite order of importance (first tag removed first)
+                                // If set to false, don't remove any tag
+                                else if(!settings.tags.remove_tags_by_order_opposite) removalOrder = [];
+                                while(neededLength > 0 && removalOrder.length > 0) {
+                                    const toRemove = removalOrder.shift();
+                                    message.tags.arr.splice(message.tags.arr.findIndex(tag => tag === toRemove), 1);
+                                    messageLength -= message.tags.content.length;
+                                    message.tags.content = message.tags.arr.map(tag => '#' + tag).join(' ');
+                                    messageLength += message.tags.content.length;
+                                    neededLength = messageLength - MAX_TWEET_LENGTH;
+                                }
+                                break;
+                            default:
+                                message.title.content = message.title.content.substr(0, message.title.content.length - neededLength - 3) + '...';
+                                messageLength -= neededLength;
+                                break;
+                        }
                     }
+                    const tweetContent = (settings.template.replace(/%%.+%%/g, message.by.content)
+                                                           .replace(/{{([^{]+)::\d+}}/g, (match, content) => message[content].content) + ' ' + website)
+                                                           .replace(/  +/g, ' ');
+                    tweet(tweetContent);
                 }
-                const tweetContent = (settings.template.replace(/%%.+%%/g, message.by.content)
-                                                       .replace(/{{([^{]+)::\d+}}/g, (match, content) => message[content].content)
-                                                       + ' ' + getWebsite(metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined, result.author, result.permlink, result.url, metadata.tags, result.body))
-                                     .replace(/  +/g, ' ');
-                tweet(tweetContent);
             }
         });
     }).catch(err => {

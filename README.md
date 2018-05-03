@@ -30,7 +30,8 @@ Before starting the bot, it is recommanded to take a look at the config file and
 Here are all the configuration possibilities:
 * **request_nodes:** list of RPC nodes to be used by the app to get posts informations (those need to be full nodes)
 * **settings:**
-  * ***allowed_links:*** replace default 'steemit.com' links by the link from the posts' apps (default: true)
+  * ***allowed_apps:*** lets you decide how posts from various apps will be linked (0: not tweeted, 1: tweeted with a link to the post on the *default_app*, 2: tweeted with a link to the post on the app it comes from)
+  * ***default_app:*** default app to be used when an app is not yet supported or has been set to 1 in *allowed_apps*
   * ***mentions:***
     * ***escape_starting_mention:*** escape a mention by adding a '.' in front of it if it is the first word of a tweet (default: true)
     * ***remove_mentions:*** remove mentions completely (default: false)
