@@ -27,7 +27,7 @@
             "utopian": 2,
             "zappl": 2
         },
-        "default_app": "busy",
+        "default_app": "steemit",
         "mentions": {
             "escape_starting_mention": true,
             "remove_mentions": false,
