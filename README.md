@@ -94,6 +94,7 @@ Website | Label | Official description | Posting | Viewing
 **[Steemhunt](https://steemhunt.com/)** | steemhunt | A Steem Fueled Product Hunt. | **✓** | ✓
 **[Steemit](https://steemit.com/)** | steemit | A social media platform where everyone gets paid for creating and curating content. | **✓** | **✓**
 **[SteemKR](https://steemkr.com/)** | steemkr | Korean version of **Steemit**. | **✓** | **✓**
+**[SteemThink](http://steemthink.com/)** | steemthink | You Ask - We Answer - Share Knowledge. | **✓** | **✓**
 **[Steepshot](https://steepshot.io/)** | steepshot | Platform that rewards people for sharing their lifestyle and visual experience. | **✓** | ✓
 **[Utopian](https://utopian.io/)** | utopian | Rewarding Open Source Contributors. | **✓** | ✓
 **[Zappl](https://zappl.com/)** | zappl | Decentralized censorship resistant micro blogging Social Media site that pays. | **✓** | ✓
