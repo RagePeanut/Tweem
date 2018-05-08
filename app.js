@@ -36,15 +36,11 @@ function stream() {
                 const op = JSON.parse(operation[1].json);
                 // Checking if it's a resteem and if it's from one of the specified accounts
                 if(op[0] === 'reblog' && steem_accounts.resteems.includes(op[1].account)) {
-                    isAlreadyTweeted(op[1].author, op[1].permlink)
-                        .then(alreadyTweeted => !alreadyTweeted && treatOperation(op[1].author, op[1].permlink, op[0]))
-                        .catch(err => console.err('Twitter search API error:', err.message));
+                    treatOperation(op[1].author, op[1].permlink, op[0]);
                 }
             // Checking if it's a post (not a comment) made by one of the specified accounts
             } else if(settings.tweet_posts && operation[0] === 'comment' && steem_accounts.posts.includes(operation[1].author) && operation[1].parent_author === '') {
-                isAlreadyTweeted(operation[1].author, operation[1].permlink)
-                    .then(alreadyTweeted => !alreadyTweeted && treatOperation(operation[1].author, operation[1].permlink, operation[0]))
-                    .catch(err => console.error('Twitter search API error:', err.message));
+                treatOperation(operation[1].author, operation[1].permlink, operation[0]);
             }
         });
     // If an error occured, add 1 to the index and put it at 0 if it is out of bound
@@ -58,28 +54,43 @@ function stream() {
 }
 
 // Tweets the content of the message
-function tweet(message) {
-    twitter.post('statuses/update', { status: message }, (err, data, response) => {
-        if(err) {
-            // The tweet already exists
-            if(err.code === 187) console.error('Error: The tweet \'' + message + '\' already exists');
-            // Retry if it's another error
-            else {
-                console.error('Unknown error:', err.message);
-                console.log('Please notify @ragepeanut of the encountered error so it doesn\'t happen to other users')
-                console.log('Retrying...');
-                setTimeout(tweet, tweet_retry_timeout, message);
-            }
-        } else console.log('Successfully tweeted', message);
-    });
+function tweet(message, url) {
+    // Checking if the link has already been included in a tweet from this account
+    isAlreadyTweeted(url)
+        .then(alreadyTweeted => {
+            if(!alreadyTweeted) {
+                twitter.post('statuses/update', { status: message }, (err, data, response) => {
+                    if(err) {
+                        // The tweet already exists
+                        if(err.code === 187) console.error('Error: The tweet \'' + message + '\' already exists');
+                        // Retry if it's another error
+                        else {
+                            console.error('Unknown error:', err.message);
+                            console.log('Please notify @ragepeanut of the encountered error so it doesn\'t happen to other users')
+                            console.log('Retrying...');
+                            setTimeout(tweet, tweet_retry_timeout, message);
+                        }
+                    } else console.log('Successfully tweeted', message);
+                });
+            } else console.log('A tweet with the same link has already been sent.');
+        })
+        .catch(err => {
+            console.err('Twitter Search API Error:', err.message);
+            console.log('Retrying...');
+            setTimeout(tweet, tweet_retry_timeout, message, url);
+        });
 }
 
 // Checks if the link has already been tweeted in the last 7 days
-function isAlreadyTweeted(author, permlink) {
-    return new Promise((resolve, reject) => {
-        twitter.get('search/tweets', { q: 'from:' + twitter_handle + ' url:' + author + ' url:' + permlink }, (err, data, response) => {
-            if(err) return reject(err);
-            resolve(data.statuses.length > 0);
+// This function is still a prototype and may resolve to false with some already tweeted links
+function isAlreadyTweeted(url) {
+    // The Twitter Search API is a mess, can't handle the @ character
+    const urlAllowedParts = url.split('@');
+    return new Promise(resolve => {
+        const query = { q: 'url:' + urlAllowedParts[urlAllowedParts.length - 1], count: 100, result_type: 'recent' };
+        twitter.get('search/tweets', query, (err, data, response) => {
+            if(err) reject(err);
+            else resolve(data.statuses.some(tweet => tweet.user.screen_name === twitter_handle));
         });
     });
 }
@@ -220,7 +231,7 @@ function treatOperation(author, permlink, type) {
                                         try {
                                             return eval(variable);
                                         } catch(err) {
-                                            console.err('Error: the variable \'' + variable + '\' doesn\'t exist. Treating it as a string.');
+                                            console.error('Error: the variable \'' + variable + '\' doesn\'t exist. Treating it as a string.');
                                             return '{{' + variable + '}}';
                                         }
                                     });
@@ -266,7 +277,7 @@ function treatOperation(author, permlink, type) {
                     const tweetContent = (settings.template.replace(/%%.+%%/g, message.by.content)
                                                            .replace(/{{([^{]+)::\d+}}/g, (match, content) => message[content].content) + ' ' + website)
                                                            .replace(/  +/g, ' ');
-                    tweet(tweetContent);
+                    tweet(tweetContent, website);
                 }
             }
         });
