@@ -97,7 +97,7 @@ Website | Label | Official description | Posting | Viewing
 **[Steemhunt](https://steemhunt.com/)** | steemhunt | A Steem Fueled Product Hunt. | **✓** | ✓
 **[Steemit](https://steemit.com/)** | steemit | A social media platform where everyone gets paid for creating and curating content. | **✓** | **✓**
 **[SteemKR](https://steemkr.com/)** | steemkr | Korean version of **Steemit**. | **✓** | **✓**
-**[Steemlinked](https://steemlinked.herokuapp.com/) | steemlinked | Blockchain-based professional network where anyone can earn rewards. | ✓ | **✓**
+**[Steemlinked](https://steemlinked.herokuapp.com/)** | steemlinked | Blockchain-based professional network where anyone can earn rewards. | ✓ | **✓**
 **[SteemThink](http://steemthink.com/)** | steemthink | You Ask - We Answer - Share Knowledge. | **✓** | **✓**
 **[Steepshot](https://steepshot.io/)** | steepshot | Platform that rewards people for sharing their lifestyle and visual experience. | **✓** | ✓
 **[Strimi](https://strimi.pl/)** | strimi | An interface for the **STEEM** blockchain that acts like **Reddit**. | **✓** | **✓**
