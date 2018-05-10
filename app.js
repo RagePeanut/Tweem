@@ -106,6 +106,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return body.match(/\(?:https:\/\/www\.(bescouted\.com\/photo\/\d{8,}\/[\w-]+\/\d{8,})\/\)/)[0] || 'steemit.com' + url;
         case 'blockdeals':
             return 'blockdeals.org' + url;
+        case 'blockpress':
+            return 'blockpress.me/?p=steem' + url;
         case 'busy':
             return 'busy.org/@' + author + '/' + permlink;
         case 'dlive':
@@ -136,14 +138,22 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'steemd.com' + url;
         case 'steemdb':
             return 'steemdb.com' + url;
+        case 'steemgig':
+            return 'steemgigs.org/@' + author + '/' + permlink;
         case 'steemhunt':
             return 'steemhunt.com/@' + author + '/' + permlink;
         case 'steemkr':
             return 'steemkr.com' + url;
+        case 'steemlinked':
+            return 'steemlinked.herokuapp.com' + url;
         case 'steemthink':
             return 'steemthink.com/#!/detail/' + author + '/' + permlink;
         case 'steepshot':
             return 'alpha.steepshot.io/post/@' + author + '/' + permlink;
+        case 'strimi':
+            return 'strimi.pl' + url;
+        case 'uneeverso':
+            return 'www.uneeverso.com' + url;
         case 'utopian':
             return 'utopian.io' + url;
         case 'zappl':
