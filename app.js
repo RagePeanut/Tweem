@@ -110,6 +110,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'blockpress.me/?p=steem' + url;
         case 'busy':
             return 'busy.org/@' + author + '/' + permlink;
+        case 'coogger':
+            return 'coogger.com/@' + author + '/' + permlink;
         case 'dlive':
             // Links for videos and livestreams don't have the same structure, the only way to check which one the post is is to check the post tags
             // DLive automatically transforms livestream links to video links when accessed once the livestream ended so the app doesn't have to check for that

@@ -80,6 +80,7 @@ Website | Label | Official description | Posting | Viewing
 **[BlockDeals](https://blockdeals.org/)** | blockdeals | A Community Platform for Bargain Hunters and Deal Spotters. | **✓** | ✓ 
 **[BlockPress](https://blockpress.me/)** | blockpress | Blockchain based content management system. | ✗ | **✓**
 **[Busy](https://busy.org/)** | busy | Ensuring compensation for the creators of value. | **✓** | **✓**
+**[Coogger](http://www.coogger.com/)** | coogger | An information sharing network that works with multiple applications. | **✓** | ✓
 **[DLive](https://www.dlive.io/#/)** | dlive | The first decentralized live streaming and video platform for you to share original content, and earn feeless rewards directly from your viewers. | **✓** | ✓
 **[DSound](https://dsound.audio/)** | dsound | Decentralized Sound Platform. | **✓** | ✓
 **[DTube](https://d.tube/)** | dtube | The first crypto-decentralized video platform, built on top of the **STEEM** Blockchain and the **IPFS** peer-to-peer network. | **✓** | ✓
@@ -99,7 +100,7 @@ Website | Label | Official description | Posting | Viewing
 **[Steemlinked](https://steemlinked.herokuapp.com/) | steemlinked | Blockchain-based professional network where anyone can earn rewards. | ✓ | **✓**
 **[SteemThink](http://steemthink.com/)** | steemthink | You Ask - We Answer - Share Knowledge. | **✓** | **✓**
 **[Steepshot](https://steepshot.io/)** | steepshot | Platform that rewards people for sharing their lifestyle and visual experience. | **✓** | ✓
-**[Strimi](https://strimi.pl/) | An interface for the **STEEM** blockchain that acts like **Reddit**. | **✓** | **✓**
+**[Strimi](https://strimi.pl/)** | strimi | An interface for the **STEEM** blockchain that acts like **Reddit**. | **✓** | **✓**
 **[Uneeverso](https://www.uneeverso.com/)** | uneeverso | Gestión de automatización **STEEM**. | ✗ | **✓**
 **[Utopian](https://utopian.io/)** | utopian | Rewarding Open Source Contributors. | **✓** | ✓
 **[Zappl](https://zappl.com/)** | zappl | Decentralized censorship resistant micro blogging Social Media site that pays. | **✓** | ✓
