@@ -9,7 +9,7 @@
         "allowed_apps": {
             "bescouted": 2,
             "blockdeals": 2,
-            "busy": 2,
+            "busy": 1,
             "coogger": 2,
             "dlive": 2,
             "dsound": 2,
