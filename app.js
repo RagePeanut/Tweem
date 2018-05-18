@@ -75,7 +75,7 @@ function tweet(message, url) {
             } else console.log('A tweet with the same link has already been sent.');
         })
         .catch(err => {
-            console.err('Twitter Search API Error:', err.message);
+            console.error('Twitter Search API Error:', err.message);
             console.log('Retrying...');
             setTimeout(tweet, tweet_retry_timeout, message, url);
         });
