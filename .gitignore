@@ -3,3 +3,8 @@
 
 # Packages
 node_modules/
+
+# Test files
+utils/
+app2.js
+config2.json

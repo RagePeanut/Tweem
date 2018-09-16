@@ -45,8 +45,7 @@
             "remove_tags_by_order_opposite": false
         },
         "template": "{{title::2}} %%by @{{author}}::1%% {{tags::3}}",
-        "tweet_posts": true,
-        "tweet_resteems": true
+        "tweet_delay_minutes": 5
     },
     "steem_accounts": {
         "posts": [

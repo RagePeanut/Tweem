@@ -16,6 +16,17 @@ const MAX_TWEET_LENGTH = 280;
 // Twitter automatically replaces links by https://t.co/[A-Za-z\d]{10}
 const LINK_LENGTH = 23;
 
+// Sending tweets with a specified delay between them
+const tweetStack = [];
+let tweetsInterval = setInterval(() => {
+    if(tweetStack[0]) {
+        // Making sure that no tweet is sent while processing this one
+        clearInterval(tweetsInterval);
+        const [message, url] = tweetStack.shift();
+        tweet(message, url);
+    }
+}, settings.tweet_delay_minutes * 60 * 1000);
+
 steemRequest.api.setOptions({ url: request_nodes[0] });
 
 // Launching the stream function
@@ -32,14 +43,14 @@ function stream() {
             // Errors are mostly caused by RPC nodes crashing
             if(err) return reject(err);
             // Resteems are inside custom_json operations
-            if(settings.tweet_resteems && operation[0] === 'custom_json') {
+            if(steem_accounts.resteems.length > 0 && operation[0] === 'custom_json') {
                 const op = JSON.parse(operation[1].json);
                 // Checking if it's a resteem and if it's from one of the specified accounts
                 if(op[0] === 'reblog' && steem_accounts.resteems.includes(op[1].account)) {
                     treatOperation(op[1].author, op[1].permlink, op[0]);
                 }
             // Checking if it's a post (not a comment) made by one of the specified accounts
-            } else if(settings.tweet_posts && operation[0] === 'comment' && steem_accounts.posts.includes(operation[1].author) && operation[1].parent_author === '') {
+            } else if(operation[0] === 'comment' && steem_accounts.posts.includes(operation[1].author) && operation[1].parent_author === '') {
                 treatOperation(operation[1].author, operation[1].permlink, operation[0]);
             }
         });
@@ -68,9 +79,19 @@ function tweet(message, url) {
                             console.error('Unknown error:', err.message);
                             console.log('Please notify @ragepeanut of the encountered error so it doesn\'t happen to other users')
                             console.log('Retrying...');
-                            setTimeout(tweet, tweet_retry_timeout, message);
+                            setTimeout(tweet, tweet_retry_timeout, message, url);
                         }
-                    } else console.log('Successfully tweeted', message);
+                    } else {
+                        console.log('Successfully tweeted', message);
+                        tweetsInterval = setInterval(() => {
+                            if(tweetStack[0]) {
+                                // Making sure that no tweet is sent while processing this one
+                                clearInterval(tweetsInterval);
+                                const [message, url] = tweetStack.shift();
+                                tweet(message, url);
+                            }
+                        }, settings.tweet_delay_minutes * 60 * 1000);
+                    }
                 });
             } else console.log('A tweet with the same link has already been sent.');
         })
@@ -289,7 +310,7 @@ function treatOperation(author, permlink, type) {
                     const tweetContent = (settings.template.replace(/%%.+%%/g, message.by.content)
                                                            .replace(/{{([^{]+)::\d+}}/g, (match, content) => message[content].content) + ' ' + website)
                                                            .replace(/  +/g, ' ');
-                    tweet(tweetContent, website);
+                    tweetStack.push([tweetContent, website]);
                 }
             }
         });
