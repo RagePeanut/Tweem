@@ -1,4 +1,4 @@
-# Tweem (0.1.5)
+# Tweem (0.1.6)
 Tweem is a bot that automatically tweets all the resteems and/or recent posts of specified accounts.
 
 ## Deploy
@@ -80,15 +80,18 @@ Website | Label | Official description | Posting | Viewing
 **[BlockPress](https://blockpress.me/)** | blockpress | Blockchain based content management system. | ✗ | **✓**
 **[Busy](https://busy.org/)** | busy | Ensuring compensation for the creators of value. | **✓** | **✓**
 **[Coogger](http://www.coogger.com/)** | coogger | An information sharing network that works with multiple applications. | **✓** | ✓
+**[dlike](https://dlike.io/)** | dlike | Share What You Like. | **✓** | ✓
 **[DLive](https://www.dlive.io/#/)** | dlive | The first decentralized live streaming and video platform for you to share original content, and earn feeless rewards directly from your viewers. | **✓** | ✓
+**[dMania](https://dmania.lol/)** | dmania | Make money with memes, funny pictures and videos. | **✓** | ✓
 **[DSound](https://dsound.audio/)** | dsound | Decentralized Sound Platform. | **✓** | ✓
 **[DTube](https://d.tube/)** | dtube | The first crypto-decentralized video platform, built on top of the **STEEM** Blockchain and the **IPFS** peer-to-peer network. | **✓** | ✓
 **[Fundition](https://fundition.io/)** | fundition | A next-generation, decentralized, peer-to-peer crowdfunding and collaboration platform. | **✓** | ✓
+**[Głodni Wiedzy](https://glodniwiedzy.pl/)** | glodniwiedzy | Dedicated Polish Steem user interface for displaying content of selected users. | ✗ | ✓
 **[Hede](https://hede.io/)** | hede | Knowledge Sharing Dictionary. | **✓** | ✓
 **[Insteem](https://www.insteem.com/)** | insteem | Decentralized News by Independent Journalists. | ✗ | **✓**
+**[Knacksteem](https://knacksteem.org/)** | knacksteem | Rewarding Talent. | **✓** | ✓
 **[Memeit.LOL](https://memeit.lol/)** | memeit.lol | A creative platform you can use to create your own meme and post it on the Steem Blockchain. | **✓** | ✓
 **[mTasks](https://steemmtask.herokuapp.com/)** | mTasks | A Fiverr like platform built on top of **STEEM** Blockchain. | **✓** | ✓
-**[OnePlace](https://oneplace.media/)** | oneplace | Web-application based on Steem and Golos blockchains. | **✓** | **✓** 
 **[Parley](https://www.parley.io/)** | parley | The place where conversations happen. | **✓** | ✓
 **[Steemd](https://steemit.com)** | steemd | A blockchain explorer for the **STEEM** blockchain. | ✗ | **✓**
 **[SteemDB](https://steemdb.com/)** | steemdb | Block explorer and database for the **STEEM** blockchain. | ✗ | **✓**
@@ -96,8 +99,7 @@ Website | Label | Official description | Posting | Viewing
 **[Steemhunt](https://steemhunt.com/)** | steemhunt | A Steem Fueled Product Hunt. | **✓** | ✓
 **[Steemit](https://steemit.com/)** | steemit | A social media platform where everyone gets paid for creating and curating content. | **✓** | **✓**
 **[SteemKR](https://steemkr.com/)** | steemkr | Korean version of **Steemit**. | **✓** | **✓**
-**[Steemlinked](https://steemlinked.herokuapp.com/)** | steemlinked | Blockchain-based professional network where anyone can earn rewards. | ✓ | **✓**
-**[SteemThink](http://steemthink.com/)** | steemthink | You Ask - We Answer - Share Knowledge. | **✓** | **✓**
+**[SteemPeak](https://steempeak.com/)** | steempeak | A new way to experience the Steem platform. | **✓** | **✓**
 **[Steepshot](https://steepshot.io/)** | steepshot | Platform that rewards people for sharing their lifestyle and visual experience. | **✓** | ✓
 **[Strimi](https://strimi.pl/)** | strimi | An interface for the **STEEM** blockchain that acts like **Reddit**. | **✓** | **✓**
 **[Uneeverso](https://www.uneeverso.com/)** | uneeverso | Gestión de automatización **STEEM**. | ✗ | **✓**

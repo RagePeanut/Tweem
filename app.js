@@ -118,8 +118,14 @@ function isAlreadyTweeted(url) {
 
 // Gets the website from which the post has been made if it can view posts
 function getWebsite(app, author, permlink, url, tags, body) {
-    if(!settings.allowed_apps[app]) return null;
-    else if(settings.allowed_apps[app] === 1) app = settings.default_app;
+    if(!app || !settings.allowed_apps[app]) {
+        // Special case for the Głodni Wiedzy app
+        if(author == 'glodniwiedzy') app = author;
+        // Special case for the Knacksteem app
+        else if(tags[0] === 'knacksteem') app = tags[0];
+        else return null;
+    }
+    if(settings.allowed_apps[app] === 1) app = settings.default_app;
     switch(app) {
         case 'bescouted':
             // Bescouted links don't follow the Steem apps logic, therefore the link has to be fetched from the body
@@ -133,28 +139,34 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'busy.org/@' + author + '/' + permlink;
         case 'coogger':
             return 'coogger.com/@' + author + '/' + permlink;
+        case 'dlike':
+            return 'dlike.io/post/' + author + '/' + permlink;
         case 'dlive':
             // Links for videos and livestreams don't have the same structure, the only way to check which one the post is is to check the post tags
             // DLive automatically transforms livestream links to video links when accessed once the livestream ended so the app doesn't have to check for that
             if(tags.includes('dlive-broadcast')) return 'dlive.io/livestream/' + author + '/' + permlink;
             if(tags.includes('dlive-video')) return 'dlive.io/video/' + author + '/' + permlink;
             // If the user changed the identifying tag, the post is treated as a steemit post
+        case 'dmania':
+            return 'dmania.lol/post/' + author + '/' + permlink;
         case 'dsound':
             return 'dsound.audio/#!/@' + author + '/' + permlink;
         case 'dtube':
             return 'd.tube/#!/v/' + author + '/' + permlink;
         case 'fundition':
             return 'fundition.io/#!/@' + author + '/' + permlink;
+        case 'glodniwiedzy':
+            return 'glodniwiedzy.pl/' + permlink;
         case 'hede':
             return 'hede.io' + url;
         case 'insteem':
             return 'www.insteem.com/stories/' + author + '/' + permlink;
+        case 'knacksteem':
+            return 'knacksteem.org/articles/' + author + '/' + permlink;
         case 'memeit.lol':
             return 'memeit.lol/@' + author + '/' + permlink;
         case 'mTasks':
             return 'steemmtask.herokuapp.com/@' + author + '/' + permlink;
-        case 'oneplace':
-            return 'oneplace.media/s/@' + author + '/' + permlink;
         case 'parley':
             return 'parley.io/thread/' + author + '/' + permlink;
         case 'steemd':
@@ -167,10 +179,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'steemhunt.com/@' + author + '/' + permlink;
         case 'steemkr':
             return 'steemkr.com' + url;
-        case 'steemlinked':
-            return 'steemlinked.herokuapp.com' + url;
-        case 'steemthink':
-            return 'steemthink.com/#!/detail/' + author + '/' + permlink;
+        case 'steempeak':
+            return 'steempeak.com' + url;
         case 'steepshot':
             return 'alpha.steepshot.io/post/@' + author + '/' + permlink;
         case 'strimi':
