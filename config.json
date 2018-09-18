@@ -30,7 +30,9 @@
             "steempeak": 2,
             "steepshot": 2,
             "strimi": 1,
+            "ulogs": 2,
             "utopian": 1,
+            "vimm.tv": 2,
             "zappl": 2
         },
         "default_app": "steemit",
@@ -48,7 +50,7 @@
             "remove_tags_by_order_opposite": false
         },
         "template": "{{title::2}} %%by @{{author}}::1%% {{tags::3}}",
-        "tweet_delay_minutes": 5
+        "tweet_delay_minutes": 1
     },
     "steem_accounts": {
         "posts": [

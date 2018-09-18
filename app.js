@@ -185,10 +185,14 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'alpha.steepshot.io/post/@' + author + '/' + permlink;
         case 'strimi':
             return 'strimi.pl' + url;
+        case 'ulogs':
+            return 'ulogs.org/@' + author + '/' + permlink;
         case 'uneeverso':
             return 'www.uneeverso.com' + url;
         case 'utopian':
             return 'utopian.io' + url;
+        case 'vimm.tv':
+            return 'www.vimm.tv/@' + author;
         case 'zappl':
             return 'zappl.com/' + url.split('/')[1] + '/' + author + '/' + permlink;
         // If the app specified in settings.default_app doesn't exist, doesn't support viewing posts, isn't yet supported or isn't correctly written, use Steemit for the link

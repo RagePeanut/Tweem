@@ -12,7 +12,7 @@ git clone https://github.com/RagePeanut/Tweem.git
 Log into your account on Twitter then visit [this page](https://apps.twitter.com/) and click on **Create New App**. Follow the steps until your bot is set up. Go on your bot's app page (not its public Twitter page, the one from your apps panel), click on **Permissions** then make sure **Read and Write** is selected under the **Access** title and click on the **Update Settings** button. Now click on **Keys and Access Tokens**, scroll down to the **Token Actions** subtitle and click on the **Generate My Access Token and Token Secret** button.
 
 3. **Set your own keys**<br>
-You will come accross some **process.env.SOMETHING** fields in the **app.js** file. If you plan on deploying this bot **ONLY** locally, you can replace them by your app's keys. You can find all the required keys on the **Keys and Access Tokens** page. However, if you plan on deploying it online you **MUST** protect those keys. The app uses environment variables to achieve that but you are free to use any other way as long as it's secure. I recommand using [Heroku](https://www.heroku.com/) if you want to deploy this bot easily and freely.
+You will come accross some **process.env.SOMETHING** fields in the **app.js** file. If you plan on deploying this bot **ONLY** locally, you can replace them by your app's keys in between single quotes. You can find all the required keys on the **Keys and Access Tokens** page. However, if you plan on deploying it online you **MUST** protect those keys. The app uses environment variables to achieve that but you are free to use any other way as long as it's secure. I recommand using [Heroku](https://www.heroku.com/) if you want to deploy this bot easily and freely.
 
 4. **Building the bot**
 ```
@@ -51,7 +51,7 @@ Here are all the configuration possibilities:
 * **twitter_handle:** the **Twitter** handle used by the bot, aka your **Twitter** handle (default: 'RagePeanut_')
 
 ## Create your own template
-**Tweems** aims to be the most configurable sharing bot on the **Steem** blockchain, that's why you can change how your tweets will look by changing their template. Let's take a look at the default template to understand what's happening.
+**Tweem** aims to be the most configurable sharing bot on the **Steem** blockchain, that's why you can change how your tweets will look by changing their template. Let's take a look at the default template to understand what's happening.
 ```
 {{title::2}} %%by @{{author}}::1%% {{tags::3}}
 ```
@@ -102,8 +102,10 @@ Website | Label | Official description | Posting | Viewing
 **[SteemPeak](https://steempeak.com/)** | steempeak | A new way to experience the Steem platform. | **✓** | **✓**
 **[Steepshot](https://steepshot.io/)** | steepshot | Platform that rewards people for sharing their lifestyle and visual experience. | **✓** | ✓
 **[Strimi](https://strimi.pl/)** | strimi | An interface for the **STEEM** blockchain that acts like **Reddit**. | **✓** | **✓**
+**[Ulogs](https://ulogs.org/)** | ulogs | "True celebrity-hood" once and for all, for "everyone". | **✓** | **✓**
 **[Uneeverso](https://www.uneeverso.com/)** | uneeverso | Gestión de automatización **STEEM**. | ✗ | **✓**
 **[Utopian](https://utopian.io/)** | utopian | Rewarding Open Source Contributors. | **✓** | ✓
+**[Vimm.TV](https://www.vimm.tv/)** | vimm.tv | Live Streaming Made Easy - Monetization Simplified | **✓** | ✓
 **[Zappl](https://zappl.com/)** | zappl | Decentralized censorship resistant micro blogging Social Media site that pays. | **✓** | ✓
 
 If you are working on a website that you feel should be in this list, let me know by contact me through on of my social networks listed below ! I'll add it as soon as possible.
