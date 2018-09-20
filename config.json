@@ -36,6 +36,7 @@
             "zappl": 2
         },
         "default_app": "steemit",
+        "delay_between_tweets_minutes": 0,
         "mentions": {
             "escape_starting_mention": true,
             "remove_mentions": false,
@@ -48,9 +49,7 @@
             "remove_tags_by_length_opposite": false,
             "remove_tags_by_order": true,
             "remove_tags_by_order_opposite": false
-        },
-        "template": "{{title::2}} %%by @{{author}}::1%% {{tags::3}}",
-        "tweet_delay_minutes": 1
+        }
     },
     "steem_accounts": {
         "posts": [
@@ -65,6 +64,10 @@
         "https://rpc.steemviz.com",
         "https://steemd.minnowsupportproject.org"
     ],
+    "template": {
+        "post": "{title}::1 {tags}::2 {link}",
+        "resteem": "{title}::1 [by {author}]::3 {tags}::2 {link}"
+    },
     "tweet_retry_timeout": 10000,
     "twitter_handle": "RagePeanut_"
 }

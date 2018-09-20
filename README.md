@@ -1,4 +1,4 @@
-# Tweem (0.1.6)
+# Tweem (0.2.0)
 Tweem is a bot that automatically tweets all the resteems and/or recent posts of specified accounts.
 
 ## Deploy
@@ -32,6 +32,7 @@ Here are all the configuration possibilities:
 * **settings:**
   * ***allowed_apps:*** lets you decide how posts from various apps will be linked (0: not tweeted, 1: tweeted with a link to the post on the *default_app*, 2: tweeted with a link to the post on the app it comes from)
   * ***default_app:*** default app to be used when an app is not yet supported or has been set to 1 in *allowed_apps*. The value has to correspond to one of the labels in the supported apps table below.
+  * ***delay_between_tweets_minutes:*** delay in minutes between tweets (default: 0)
   * ***mentions:***
     * ***escape_starting_mention:*** escape a mention by adding a '.' in front of it if it is the first word of a tweet (default: true)
     * ***remove_mentions:*** remove mentions completely (default: false)
@@ -44,33 +45,24 @@ Here are all the configuration possibilities:
     * ***remove_tags_by_order:*** remove tags by order of importance (last tag removed first) if the tweet is too long (default: true)
     * ***remove_tags_by_order_opposite:*** remove tags by their opposite order of importance (first tags removed first) if the tweet is too long (default: false)
   * ***template:*** template for the tweet (explained in 'Create your own template')
-  * ***tweet_delay_minutes:*** minimum delay in minutes between tweets (default: 5)
 * **steem_accounts:** lists of Steem accounts to react to when they post (posts) and/or when they resteem (resteems) (default: ['ragepeanut'] and ['ragepeanut'])
 * **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
 * **tweet_retry_timeout:** time in milliseconds to wait for before retrying to tweet if it failed (default: 10000)
 * **twitter_handle:** the **Twitter** handle used by the bot, aka your **Twitter** handle (default: 'RagePeanut_')
 
 ## Create your own template
-**Tweem** aims to be the most configurable sharing bot on the **Steem** blockchain, that's why you can change how your tweets will look by changing their template. Let's take a look at the default template to understand what's happening.
+**Tweem** aims to be the most configurable sharing bot on the **Steem** blockchain, that's why you can change how your tweets will look by changing their template for posts and for resteems. Let's take a look at everything possible with this example template.
 ```
-{{title::2}} %%by @{{author}}::1%% {{tags::3}}
+I just resteemed {title}::1 [by {author}]::3 {tags,capitalize}::2 {link}
 ```
-Every part of the tweet (except the 'by' part) is defined by `{{DATA::IMPORTANCE}}`, `DATA` is the data indicator, it can be replaced by 'title' or 'tags'. You can't have the same data indicator twice in a template. `IMPORTANCE` is a number that specifies how important this part of the tweet is. If a message is too long to be twitted (more than 280 characters), the part of the tweet that has the lowest `IMPORTANCE` number will get changed to fit the maximum message length. The `%%by @{{author}}::1%%` may be the hardest part of this template to understand, it corresponds to the 'by' part of the tweet and will only be in the tweet when you resteem a post. It is defined by `%%TEXT{{author}}TEXT::IMPORTANCE%%`. `TEXT` is any piece of text you would like to see in the tweet, `{{author}}` is the author username (right now, 'author' is the only value you can put between these curly brackets) and `IMPORTANCE` has already been explained before. You can only put on 'by' part in your template. The link is not defined in the template, that's because it must always be at the end of the tweet for **Twitter** to handle it well. Here are a few examples along with their expected results to help you understand how the templating works.
-* `{{title::2}} %%by @{{author}}::1%% {{tags::3}}`<br>
-**Post:** `TITLE TAGS`<br>
-**Resteem:** `TITLE by @AUTHOR TAGS`
+This template can be separated in multiple parts to facilitate your comprehension. The parts are as follow, we will go through each of them: `I just resteemed`, `{title}`, `[by {author}]`, `{tags,capitalize}` and `{link}`. The first part, `I just resteemed`, is pretty straightforward. It simply is a *piece of text* that will not get altered whatsoever, which means the tweet produced will always start with `I just resteemed` no matter what. The second and last parts, `{title}` and `{link}` are *variables*. They will get replaced by their values. `{title}` will get replaced by the title of the post and `{link}` will get replaced by a link to the post. It is recommanded to keep the `{link}` *variable* at the end of templates since **Twitter** can behave weirdly when it isn't. `{tags,capitalize}` is also a *variable* but it contains one more thing: a *modifier*. *Modifiers* are used to ask **Tweem** to alter the value of a *variable*, they are added to *variables* by respecting this scheme (whitespaces are not allowed): `{variable,modifier}`. Three *modifiers* exist: `uppercase`, `lowercase` and `capitalize`. As for *variables*, you can see a short list of them below. The last part that hasn't been talked about yet is the `[by {author}]` part. It is used to specify that `by {author}` can be removed if there are too much characters for the tweet. In order to determine the order of removal of text parts and even if you only have one removable part, you have to use the `::importance` syntax after removable parts where 1 is the most important. As you can see in the template, `[{variable}]::importance` (removable *variables*) can be simply written `{variable}::importance`. Taking this template as an example, `[by {author}]` will get removed first, followed by `{tags,capitalize}` and then `{title}` if there are still too many characters.
 
-* `%%I just resteemed ::1%%{{title::2}} {{tags::3}}`<br>
-**Post:** `TITLE TAGS`<br>
-**Resteem:** `I just resteemed TITLE TAGS`
-
-* `{{title::2}} %%by {{author}} was amazing!::1%%`<br>
-**Post:** `TITLE`<br>
-**Resteem:** `TITLE by AUTHOR was amazing!`
-
-* `Check this post out! {{tags::1}}`<br>
-**Post:** `Check this post out! TAGS`<br>
-**Resteem:** `Check this post out! TAGS`
+Variable | Description | Removal
+-|-|-
+author | The post's author | Instant
+link | The post's link | Instant
+tags | The post's tags | Tag by tag
+title | The post's title | Ellipsis
 
 ## Supported apps
 Website | Label | Official description | Posting | Viewing

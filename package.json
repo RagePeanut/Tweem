@@ -1,6 +1,6 @@
 {
   "name": "tweem",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "A bot tweeting all the resteems and/or recent posts of specified accounts.",
   "main": "app.js",
   "scripts": {
