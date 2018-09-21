@@ -30,6 +30,7 @@ Before starting the bot, it is recommended to take a look at the config file and
 Here are all the configuration possibilities:
 * **request_nodes:** list of RPC nodes to be used by the app to get posts informations (those need to be full nodes)
 * **settings:**
+  * ***advanced_mode_steem_accounts:*** list of accounts that get **Twitter**-like posts crossposted to **Twitter** instead of shared (default: ["ragepeanut"])
   * ***allowed_apps:*** lets you decide how posts from various apps will be linked (0: not tweeted, 1: tweeted with a link to the post on the *default_app*, 2: tweeted with a link to the post on the app it comes from)
   * ***default_app:*** default app to be used when an app is not yet supported or has been set to 1 in *allowed_apps*. The value has to correspond to one of the labels in the supported apps table below.
   * ***mentions:***
@@ -44,16 +45,17 @@ Here are all the configuration possibilities:
     * ***remove_tags_by_order:*** remove tags by order of importance (last tag removed first) if the tweet is too long (default: true)
     * ***remove_tags_by_order_opposite:*** remove tags by their opposite order of importance (first tags removed first) if the tweet is too long (default: false)
   * ***tweet_frequency_minutes:*** delay in minutes between tweets (default: 0)
-* **steem_accounts:** lists of Steem accounts to react to when they post (posts) and/or when they resteem (resteems) (default: ['ragepeanut'] and ['ragepeanut'])
+* **steem_accounts:** lists of Steem accounts to react to when they post (posts) and/or when they resteem (resteems) (default: ["ragepeanut"] and ["ragepeanut"])
 * **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
 * **template:** templates for the tweets (explained in 'Create your own template')
   * ***post:*** template for tweets related to posts
   * ***resteem:*** template for tweets related to resteems
+  * ***tweet_like:*** template for tweets crossposted from tweet-like posts
 * **tweet_retry_timeout:** time in milliseconds to wait for before retrying to tweet if it failed (default: 10000)
 * **twitter_handle:** the **Twitter** handle used by the bot, aka your **Twitter** handle (default: 'RagePeanut_')
 
 ## Create your own template
-**Tweem** aims to be the most configurable sharing bot on the **Steem** blockchain, that's why you can change how your tweets will look by changing their template for posts and for resteems. Let's take a look at everything possible with this example template.
+**Tweem** aims to be the most configurable sharing bot on the **Steem** blockchain, that's why you can change how your tweets will look by changing their template for posts, resteems and tweet-like posts. Let's take a look at everything possible with this example template.
 ```
 I just resteemed {title}::1 [by {author}]::3 {tags,capitalize}::2 {link}
 ```

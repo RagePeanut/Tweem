@@ -4,7 +4,7 @@ const steemRequest = require('steem');
 
 const parser = require('./utils/parser');
 
-const { request_nodes, settings, steem_accounts, stream_nodes, template, tweet_retry_timeout, twitter_handle } = require('./config');
+const { personal_steem_accounts, request_nodes, settings, steem_accounts, stream_nodes, template, tweet_retry_timeout, twitter_handle } = require('./config');
 
 const twitter = new Twit({
     consumer_key: process.env.CONSUMER_KEY,
@@ -110,13 +110,15 @@ function tweet(message, url) {
 /**
  * Checks if a link has already been tweeted in the last 7 days
  * This function is still a prototype and may resolve to false with some already tweeted links
- * @param {string} url
+ * @param {string} url The post's url
  * @returns {Promise} Unrejectable promise resolving to true if a URL has already been tweeted and false otherwise
  */
 function isAlreadyTweeted(url) {
     // The Twitter Search API is a mess, can't handle the @ character
     const urlAllowedParts = url.split('@');
     return new Promise(resolve => {
+        // Tweet-like post
+        if(url === '') resolve(false);
         const query = { q: 'url:' + urlAllowedParts[urlAllowedParts.length - 1], count: 100, result_type: 'recent' };
         twitter.get('search/tweets', query, (err, data, response) => {
             if(err) resolve(false);
@@ -233,7 +235,7 @@ function processOperation(author, permlink, type) {
         steemRequest.api.getContent(author, permlink, (err, result) => {
             if(err) return reject(err);
             // If the operation is a comment operation, it must be a post creation, not a post update
-            else if(type === 'reblog' || type === 'comment' && result.last_update === result.created) {
+            else if(type === 'reblog' || type === 'comment' /*&& result.last_update === result.created*/) {
                 let metadata;
                 try {
                     metadata = JSON.parse(result.json_metadata);
@@ -242,15 +244,22 @@ function processOperation(author, permlink, type) {
                 } catch(err) {
                     return reject(err);
                 }
+                let website, templateType;
+                // Twitter-like posts
+                if(settings.advanced_mode_steem_accounts.includes(author) && /^(?:\s*!\[[^\]]*]\([^)]*\))*\s*$/.test(result.body)) {
+                    website = '';
+                    templateType = 'tweet_like';
                 // First parameter (app): checking for all the known ways of specifying an app, if none of them exists the app is set to undefined
-                const website = getWebsite(metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined, result.author, result.permlink, result.url, metadata.tags, result.body);
+                } else {
+                    website = getWebsite(metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined, result.author, result.permlink, result.url, metadata.tags, result.body);
+                    templateType = (type === 'reblog' ? 'resteem': 'post')
+                }
                 // If tweeting has been allowed for posts from this website
-                if(website) {
-                    const templateType = (type === 'reblog' ? 'resteem': 'post');
+                if(website !== null) {
                     const tweetTemplate = template[templateType];
                     const values = {
                         author: author,
-                        link: '%' + '_'.repeat(LINK_LENGTH - 2) + '%',
+                        link: website === '' ? '' : '%' + '_'.repeat(LINK_LENGTH - 2) + '%',
                         tags: metadata.tags || result.category,
                         title: result.title
                     }
