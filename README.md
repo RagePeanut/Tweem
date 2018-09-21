@@ -12,7 +12,7 @@ git clone https://github.com/RagePeanut/Tweem.git
 Log into your account on Twitter then visit [this page](https://apps.twitter.com/) and click on **Create New App**. Follow the steps until your bot is set up. Go on your bot's app page (not its public Twitter page, the one from your apps panel), click on **Permissions** then make sure **Read and Write** is selected under the **Access** title and click on the **Update Settings** button. Now click on **Keys and Access Tokens**, scroll down to the **Token Actions** subtitle and click on the **Generate My Access Token and Token Secret** button.
 
 3. **Set your own keys**<br>
-You will come accross some **process.env.SOMETHING** fields in the **app.js** file. If you plan on deploying this bot **ONLY** locally, you can replace them by your app's keys in between single quotes. You can find all the required keys on the **Keys and Access Tokens** page. However, if you plan on deploying it online you **MUST** protect those keys. The app uses environment variables to achieve that but you are free to use any other way as long as it's secure. I recommand using [Heroku](https://www.heroku.com/) if you want to deploy this bot easily and freely.
+You will come accross some **process.env.SOMETHING** fields in the **app.js** file. If you plan on deploying this bot on a safe environment (locally for example), you can replace them by your app's keys in between single quotes. You can find all the required keys on the **Keys and Access Tokens** page. However, if you plan on deploying it online you **MUST** protect those keys. The app uses environment variables to achieve that but you are free to use any other way as long as it's secure. I recommend using [Heroku](https://www.heroku.com/) if you want to deploy this bot easily and freely.
 
 4. **Building the bot**
 ```
@@ -23,10 +23,10 @@ npm install
 ```
 npm start
 ```
-**⚠⚠⚠** I recommand to wait at least one minute after the "Starting a new stream" message appears in the console before testing it if you don't want your post to get unnoticed by the bot. This is because "Starting a new stream" doesn't mean that the stream is operational yet but that's it's about to be.
+**⚠⚠⚠** I recommend to wait at least one minute after the "Starting a new stream" message appears in the console before testing it if you don't want your post to get unnoticed by the bot. This is because "Starting a new stream" doesn't mean that the stream is operational yet but that's it's about to be.
 
 ## Configuration
-Before starting the bot, it is recommanded to take a look at the config file and to modify its values to match your liking.<br>
+Before starting the bot, it is recommended to take a look at the config file and to modify its values to match your liking.<br>
 Here are all the configuration possibilities:
 * **request_nodes:** list of RPC nodes to be used by the app to get posts informations (those need to be full nodes)
 * **settings:**
