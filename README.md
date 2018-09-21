@@ -32,7 +32,6 @@ Here are all the configuration possibilities:
 * **settings:**
   * ***allowed_apps:*** lets you decide how posts from various apps will be linked (0: not tweeted, 1: tweeted with a link to the post on the *default_app*, 2: tweeted with a link to the post on the app it comes from)
   * ***default_app:*** default app to be used when an app is not yet supported or has been set to 1 in *allowed_apps*. The value has to correspond to one of the labels in the supported apps table below.
-  * ***delay_between_tweets_minutes:*** delay in minutes between tweets (default: 0)
   * ***mentions:***
     * ***escape_starting_mention:*** escape a mention by adding a '.' in front of it if it is the first word of a tweet (default: true)
     * ***remove_mentions:*** remove mentions completely (default: false)
@@ -44,6 +43,7 @@ Here are all the configuration possibilities:
     * ***remove_tags_by_length_opposite:*** remove tags by length (longest removed first) if the tweet is too long (default: false)
     * ***remove_tags_by_order:*** remove tags by order of importance (last tag removed first) if the tweet is too long (default: true)
     * ***remove_tags_by_order_opposite:*** remove tags by their opposite order of importance (first tags removed first) if the tweet is too long (default: false)
+  * ***tweet_frequency_minutes:*** delay in minutes between tweets (default: 0)
 * **steem_accounts:** lists of Steem accounts to react to when they post (posts) and/or when they resteem (resteems) (default: ['ragepeanut'] and ['ragepeanut'])
 * **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
 * **template:** templates for the tweets (explained in 'Create your own template')

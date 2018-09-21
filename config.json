@@ -36,7 +36,6 @@
             "zappl": 2
         },
         "default_app": "steemit",
-        "delay_between_tweets_minutes": 0,
         "mentions": {
             "escape_starting_mention": true,
             "remove_mentions": false,
@@ -49,7 +48,8 @@
             "remove_tags_by_length_opposite": false,
             "remove_tags_by_order": true,
             "remove_tags_by_order_opposite": false
-        }
+        },
+        "tweet_frequency_minutes": 0
     },
     "steem_accounts": {
         "posts": [

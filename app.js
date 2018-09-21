@@ -27,7 +27,7 @@ let tweetsInterval = setInterval(() => {
         const [message, url] = tweetStack.shift();
         tweet(message, url);
     }
-}, settings.delay_between_tweets_minutes * 60 * 1000);
+}, settings.tweet_frequency_minutes * 60 * 1000);
 
 steemRequest.api.setOptions({ url: request_nodes[0] });
 
@@ -95,7 +95,7 @@ function tweet(message, url) {
                                 const [message, url] = tweetStack.shift();
                                 tweet(message, url);
                             }
-                        }, settings.delay_between_tweets_minutes * 60 * 1000);
+                        }, settings.tweet_frequency_minutes * 60 * 1000);
                     }
                 });
             } else console.log('A tweet with the same link has already been sent.');
