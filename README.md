@@ -44,9 +44,11 @@ Here are all the configuration possibilities:
     * ***remove_tags_by_length_opposite:*** remove tags by length (longest removed first) if the tweet is too long (default: false)
     * ***remove_tags_by_order:*** remove tags by order of importance (last tag removed first) if the tweet is too long (default: true)
     * ***remove_tags_by_order_opposite:*** remove tags by their opposite order of importance (first tags removed first) if the tweet is too long (default: false)
-  * ***template:*** template for the tweet (explained in 'Create your own template')
 * **steem_accounts:** lists of Steem accounts to react to when they post (posts) and/or when they resteem (resteems) (default: ['ragepeanut'] and ['ragepeanut'])
 * **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
+* **template:** templates for the tweets (explained in 'Create your own template')
+  * ***post:*** template for tweets related to posts
+  * ***resteem:*** template for tweets related to resteems
 * **tweet_retry_timeout:** time in milliseconds to wait for before retrying to tweet if it failed (default: 10000)
 * **twitter_handle:** the **Twitter** handle used by the bot, aka your **Twitter** handle (default: 'RagePeanut_')
 
@@ -100,7 +102,7 @@ Website | Label | Official description | Posting | Viewing
 **[Vimm.TV](https://www.vimm.tv/)** | vimm.tv | Live Streaming Made Easy - Monetization Simplified | **✓** | ✓
 **[Zappl](https://zappl.com/)** | zappl | Decentralized censorship resistant micro blogging Social Media site that pays. | **✓** | ✓
 
-If you are working on a website that you feel should be in this list, let me know by contact me through on of my social networks listed below ! I'll add it as soon as possible.
+If you are working on a website that you feel should be in this list, let me know by contacting me through one of the social networks listed below ! I'll add it as soon as possible.
 
 ## Special thanks to
 **Steemit** for [steem.js](https://github.com/steemit/steem-js)<br>
