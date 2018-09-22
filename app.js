@@ -53,7 +53,7 @@ function processOperation(author, permlink, type) {
         steemRequest.api.getContent(author, permlink, (err, result) => {
             if(err) return reject(err);
             // If the operation is a comment operation, it must be a post creation, not a post update
-            else if(type === 'reblog' || type === 'comment' /*&& result.last_update === result.created*/) {
+            else if(type === 'reblog' || type === 'comment' && result.last_update === result.created) {
                 let metadata;
                 try {
                     metadata = JSON.parse(result.json_metadata);
@@ -83,7 +83,7 @@ function processOperation(author, permlink, type) {
                                 tags: metadata.tags || result.category,
                                 title: result.title
                             }
-                            const structure = parser.parse(template[templateType], values);
+                            let structure = parser.parse(template[templateType], values);
                             while(structure.parsed.length > target.MAX_LENGTH) {
                                 structure = parser.removeLeastImportant(structure);
                             }

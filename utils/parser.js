@@ -1,4 +1,4 @@
-const config = require('../config');
+const { settings } = require('../config');
 
 const modifiers = {
     capitalize: str => str.replace(/[A-Za-z0-9]+/g, match => match[0].toUpperCase() + match.substring(1)),
@@ -115,15 +115,15 @@ function processVariable(variable, modifier, values) {
             variable = values[variable];
             // Mentions
             // If set to true, completely removes the mentions in the title (e.g. 'Hello @ragepeanut !' --> 'Hello !')
-            if(config.settings.mentions.remove_mentions) variable = variable.replace(/( )?@[a-zA-Z0-9._-]+( )?/g, (match, firstSpace, secondSpace) => firstSpace || secondSpace);
+            if(settings.mentions.remove_mentions) variable = variable.replace(/( )?@[a-zA-Z0-9._-]+( )?/g, (match, firstSpace, secondSpace) => firstSpace || secondSpace);
             // If set to true, removes the @ character from mentions (e.g. 'Bye @ragepeanut !' --> 'Bye ragepeanut !')
-            else if(config.settings.mentions.remove_mentions_at_char) variable = variable.replace(/@([a-zA-Z0-9._-]+)/g, '$1');
+            else if(settings.mentions.remove_mentions_at_char) variable = variable.replace(/@([a-zA-Z0-9._-]+)/g, '$1');
             // If set to true, escapes a mention if it is the first word of the title (e.g. '@ragepeanut isn\'t a real peanut :O' --> '.@ragepeanut isn\'t a real peanut :O')
-            else if(config.settings.mentions.escape_starting_mention && variable[0] === '@') variable = '.' + variable;
+            else if(settings.mentions.escape_starting_mention && variable[0] === '@') variable = '.' + variable;
         } else if(variable === 'tags') {
             let tags = values[variable];
             // If set to true, removes any duplicate tag from the tags array
-            if(config.settings.tags.check_for_duplicate) {
+            if(settings.tags.check_for_duplicate) {
                 const tmpTags = [];
                 tags.forEach(tag => {
                     if(!tmpTags.includes(tag)) tmpTags.push(tag);
@@ -131,7 +131,7 @@ function processVariable(variable, modifier, values) {
                 tags = tmpTags;
             }
             // If set to an integer, takes only the X first tags
-            if(config.settings.tags.limit) tags = tags.slice(0, config.settings.tags.limit);
+            if(settings.tags.limit) tags = tags.slice(0, settings.tags.limit);
             variable = tags.map(tag => '#' + tag).join(' ');
         } else variable = values[variable];
     }
