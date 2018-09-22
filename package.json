@@ -19,6 +19,7 @@
   "author": "RagePeanut",
   "license": "MIT",
   "dependencies": {
+    "request": "^2.88.0",
     "steem": "^0.7.1",
     "twit": "^2.2.9"
   },
