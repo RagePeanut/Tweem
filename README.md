@@ -1,5 +1,5 @@
 # Tweem (0.2.0)
-Tweem is a bot that automatically tweets all the resteems and/or recent posts of specified accounts.
+Tweem is a bot that automatically shares all the resteems and/or recent posts of specified accounts to your favorite social networks, it can also crosspost your tweet-like posts.
 
 ## Deploy
 **Required:** [Git](https://git-scm.com/), [NPM](https://www.npmjs.com/), [Node.js](https://nodejs.org/), a [Twitter](https://twitter.com/) account that will be used by the bot.<br>
@@ -31,35 +31,36 @@ Here are all the configuration possibilities:
 * **request_nodes:** list of RPC nodes to be used by the app to get posts informations (those need to be full nodes)
 * **settings:**
   * ***advanced_mode_steem_accounts:*** list of accounts that get **Twitter**-like posts crossposted to **Twitter** instead of shared (default: ["ragepeanut"])
-  * ***allowed_apps:*** lets you decide how posts from various apps will be linked (0: not tweeted, 1: tweeted with a link to the post on the *default_app*, 2: tweeted with a link to the post on the app it comes from)
+  * ***allowed_apps:*** lets you decide how posts from various apps will be linked (0: not posted, 1: posted with a link to the post on the *default_app*, 2: posted with a link to the post on the app it comes from)
   * ***default_app:*** default app to be used when an app is not yet supported or has been set to 1 in *allowed_apps*. The value has to correspond to one of the labels in the supported apps table below.
   * ***mentions:***
     * ***escape_starting_mention:*** escape a mention by adding a '.' in front of it if it is the first word of a tweet (default: true)
     * ***remove_mentions:*** remove mentions completely (default: false)
     * ***remove_mentions_at_char:*** remove the '@' character from mentions (default: false)
+  * ***post_frequency_minutes:*** delay in minutes between posts sent to a social network (default: 0)
+  * ***post_retry_timeout:*** time in milliseconds to wait for before retrying to post to a social network if it failed (default: 10000)
   * ***tags:***
     * ***check_for_duplicate:*** check for duplicate tags and remove them (default: true)
-    * ***limit:*** limit of tags to be included in the tweet, represented by a number or false if no limit is wanted (default: false)
-    * ***remove_tags_by_length:*** remove tags by length (smallest removed first) if the tweet is too long (default: false)
-    * ***remove_tags_by_length_opposite:*** remove tags by length (longest removed first) if the tweet is too long (default: false)
-    * ***remove_tags_by_order:*** remove tags by order of importance (last tag removed first) if the tweet is too long (default: true)
-    * ***remove_tags_by_order_opposite:*** remove tags by their opposite order of importance (first tags removed first) if the tweet is too long (default: false)
-  * ***tweet_frequency_minutes:*** delay in minutes between tweets (default: 0)
+    * ***limit:*** limit of tags to be included in the post, represented by a number or false if no limit is wanted (default: false)
+    * ***remove_tags_by_length:*** remove tags by length (smallest removed first) if the post is too long (default: false)
+    * ***remove_tags_by_length_opposite:*** remove tags by length (longest removed first) if the post is too long (default: false)
+    * ***remove_tags_by_order:*** remove tags by order of importance (last tag removed first) if the post is too long (default: true)
+    * ***remove_tags_by_order_opposite:*** remove tags by their opposite order of importance (first tags removed first) if the post is too long (default: false)
 * **steem_accounts:** lists of Steem accounts to react to when they post (posts) and/or when they resteem (resteems) (default: ["ragepeanut"] and ["ragepeanut"])
 * **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
-* **template:** templates for the tweets (explained in 'Create your own template')
-  * ***post:*** template for tweets related to posts
-  * ***resteem:*** template for tweets related to resteems
-  * ***tweet_like:*** template for tweets crossposted from tweet-like posts
-* **tweet_retry_timeout:** time in milliseconds to wait for before retrying to tweet if it failed (default: 10000)
+* **targets:** the social networks to which **Tweem** should post (true = post, false = don't post, default: true)
+* **template:** templates for the posts (explained in 'Create your own template')
+  * ***post:*** template for posts related to posts
+  * ***resteem:*** template for posts related to resteems
+  * ***tweet_like:*** template for posts crossposted from tweet-like posts
 * **twitter_handle:** the **Twitter** handle used by the bot, aka your **Twitter** handle (default: 'RagePeanut_')
 
 ## Create your own template
-**Tweem** aims to be the most configurable sharing bot on the **Steem** blockchain, that's why you can change how your tweets will look by changing their template for posts, resteems and tweet-like posts. Let's take a look at everything possible with this example template.
+**Tweem** aims to be the most configurable sharing bot on the **Steem** blockchain, that's why you can change how your posts will look by changing their template for posts, resteems and tweet-like posts. Let's take a look at everything possible with this example template.
 ```
 I just resteemed {title}::1 [by {author}]::3 {tags,capitalize}::2 {link}
 ```
-This template can be separated in multiple parts to facilitate your comprehension. The parts are as follow, we will go through each of them: `I just resteemed`, `{title}`, `[by {author}]`, `{tags,capitalize}` and `{link}`. The first part, `I just resteemed`, is pretty straightforward. It simply is a *piece of text* that will not get altered whatsoever, which means the tweet produced will always start with `I just resteemed` no matter what. The second and last parts, `{title}` and `{link}` are *variables*. They will get replaced by their values. `{title}` will get replaced by the title of the post and `{link}` will get replaced by a link to the post. It is recommanded to keep the `{link}` *variable* at the end of templates since **Twitter** can behave weirdly when it isn't. `{tags,capitalize}` is also a *variable* but it contains one more thing: a *modifier*. *Modifiers* are used to ask **Tweem** to alter the value of a *variable*, they are added to *variables* by respecting this scheme (whitespaces are not allowed): `{variable,modifier}`. Three *modifiers* exist: `uppercase`, `lowercase` and `capitalize`. As for *variables*, you can see a short list of them below. The last part that hasn't been talked about yet is the `[by {author}]` part. It is used to specify that `by {author}` can be removed if there are too much characters for the tweet. In order to determine the order of removal of text parts and even if you only have one removable part, you have to use the `::importance` syntax after removable parts where 1 is the most important. As you can see in the template, `[{variable}]::importance` (removable *variables*) can be simply written `{variable}::importance`. Taking this template as an example, `[by {author}]` will get removed first, followed by `{tags,capitalize}` and then `{title}` if there are still too many characters.
+This template can be separated in multiple parts to facilitate your comprehension. The parts are as follow, we will go through each of them: `I just resteemed`, `{title}`, `[by {author}]`, `{tags,capitalize}` and `{link}`. The first part, `I just resteemed`, is pretty straightforward. It simply is a *piece of text* that will not get altered whatsoever, which means the message produced will always start with `I just resteemed` no matter what. The second and last parts, `{title}` and `{link}` are *variables*. They will get replaced by their values. `{title}` will get replaced by the title of the post and `{link}` will get replaced by a link to the post. It is recommanded to keep the `{link}` *variable* at the end of templates since **Twitter** can behave weirdly when it isn't. `{tags,capitalize}` is also a *variable* but it contains one more thing: a *modifier*. *Modifiers* are used to ask **Tweem** to alter the value of a *variable*, they are added to *variables* by respecting this scheme (whitespaces are not allowed): `{variable,modifier}`. Three *modifiers* exist: `uppercase`, `lowercase` and `capitalize`. As for *variables*, you can see a short list of them below. The last part that hasn't been talked about yet is the `[by {author}]` part. It is used to specify that `by {author}` can be removed if there are too much characters for the message. In order to determine the order of removal of text parts and even if you only have one removable part, you have to use the `::importance` syntax after removable parts where 1 is the most important. As you can see in the template, `[{variable}]::importance` (removable *variables*) can be simply written `{variable}::importance`. Taking this template as an example, `[by {author}]` will get removed first, followed by `{tags,capitalize}` and then `{title}` if there are still too many characters.
 
 Variable | Description | Removal
 -|-|-

@@ -1,29 +1,9 @@
-const Twit = require('twit');
 const steemStream = require('steem');
 const steemRequest = require('steem');
-const request = require('request').defaults({ encoding: 'base64' });
 
 const parser = require('./utils/parser');
 
-const { request_nodes, settings, steem_accounts, stream_nodes, template, tweet_retry_timeout, twitter_handle } = require('./config');
-
-const twitter = new Twit({
-    consumer_key: process.env.CONSUMER_KEY,
-    consumer_secret: process.env.CONSUMER_SECRET,
-    access_token: process.env.ACCESS_TOKEN,
-    access_token_secret: process.env.ACCESS_TOKEN_SECRET
-});
-
-// The current tweet length limit is at 280 characters
-const MAX_TWEET_LENGTH = 280;
-// Twitter automatically replaces links by https://t.co/[A-Za-z\d]{10}
-const LINK_LENGTH = 23;
-// The current maximum amount of images linked to a tweet is 4
-const MAX_IMAGE_COUNT = 4;
-
-// Sending tweets with a specified delay between them
-const tweetStack = [];
-let tweetsInterval = setInterval(processTweet, settings.tweet_frequency_minutes * 60 * 1000);
+const { request_nodes, settings, steem_accounts, stream_nodes, targets, template } = require('./config');
 
 steemRequest.api.setOptions({ url: request_nodes[0] });
 
@@ -62,92 +42,65 @@ function stream() {
 }
 
 /**
- * Tweets if the related URL hasn't been tweeted yet
- * @param {string} params The tweet content
- * @param {string} [url] The post's URL
+ * Processes a reblog operation or a comment operation
+ * @param {string} author The post's author
+ * @param {string} permlink The post's permlink
+ * @param {string} type The post's type (reblog or comment)
  */
-function tweet(params, url) {
-    // Checking if the link has already been included in a tweet from this account
-    isAlreadyTweeted(url)
-        .then(alreadyTweeted => {
-            if(!alreadyTweeted) {
-                twitter.post('statuses/update', params, err => {
-                    if(err) {
-                        // The tweet already exists
-                        if(err.code === 187) console.error('Error: The tweet \'' + params.status + '\' already exists');
-                        // Retry if it's another error
-                        else {
-                            console.error('Unknown error:', err.message);
-                            console.log('Please notify @ragepeanut of the encountered error so it doesn\'t happen to other users')
-                            console.log('Retrying...');
-                            setTimeout(tweet, tweet_retry_timeout, params, url);
+function processOperation(author, permlink, type) {
+    new Promise((resolve, reject) => {
+        // Getting the content of the post
+        steemRequest.api.getContent(author, permlink, (err, result) => {
+            if(err) return reject(err);
+            // If the operation is a comment operation, it must be a post creation, not a post update
+            else if(type === 'reblog' || type === 'comment' /*&& result.last_update === result.created*/) {
+                let metadata;
+                try {
+                    metadata = JSON.parse(result.json_metadata);
+                    if(!metadata) throw new Error('The metadata is ', metadata);
+                    if(typeof metadata !== 'object') throw new Error('The metadata is of type ' + typeof metadata);
+                } catch(err) {
+                    return reject(err);
+                }
+                let website, templateType;
+                // Tweet-like posts
+                if(settings.advanced_mode_steem_accounts.includes(author) && /^(?:\s*!\[[^\]]*]\([^)]*\))*\s*$/.test(result.body)) {
+                    website = '';
+                    templateType = 'tweet_like';
+                // First parameter (app): checking for all the known ways of specifying an app, if none of them exists the app is set to undefined
+                } else {
+                    website = getWebsite(metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined, result.author, result.permlink, result.url, metadata.tags, result.body);
+                    templateType = (type === 'reblog' ? 'resteem': 'post')
+                }
+                // If posting has been allowed for posts from this website
+                if(website !== null) {
+                    for(let tgt in targets) {
+                        if(targets[tgt]) {
+                            const target = require('./targets/' + tgt);
+                            const values = {
+                                author: author,
+                                link: website === '' ? '' : '%' + '_'.repeat(target.LINK_LENGTH - 2) + '%',
+                                tags: metadata.tags || result.category,
+                                title: result.title
+                            }
+                            const structure = parser.parse(template[templateType], values);
+                            while(structure.parsed.length > target.MAX_LENGTH) {
+                                structure = parser.removeLeastImportant(structure);
+                            }
+                            structure.parsed = structure.parsed.replace(values.link, website);
+                            target.add(templateType === 'tweet_like', structure.parsed, website || metadata.image || []);
                         }
-                    } else {
-                        console.log('Successfully tweeted', params.status);
-                        tweetsInterval = setInterval(processTweet, settings.tweet_frequency_minutes * 60 * 1000);
                     }
-                });
-            } else console.log('A tweet with the same link has already been sent.');
-        })
-        .catch(err => {
-            console.error('Twitter Search API Error:', err.message);
-            console.log('Retrying...');
-            setTimeout(tweet, tweet_retry_timeout, params, url);
+                }
+            }
         });
-}
-
-/** Processes a tweet */
-function processTweet() {
-    if(tweetStack[0]) {
-        // Making sure that no tweet is sent while processing this one
-        clearInterval(tweetsInterval);
-        const [params, url] = tweetStack.shift();
-        if(url) tweet(params, url);
-        else {
-            Promise.all(params.media_ids.slice(0, MAX_IMAGE_COUNT).map(url => uploadImage(url)))
-                   .then(media_ids => {
-                       params.media_ids = media_ids.filter(id => id !== 'NOT_UPLOADED');
-                       tweet(params);
-                   });
-        }
-    }
-}
-
-/** 
- * Uploads an image on Twitter
- * @param {string} url The image's url
- * @returns {Promise} Unrejectable promise resolving to the uploaded media ID or to 'NOT_UPLOADED' 
- */
-function uploadImage(url) {
-    return new Promise(resolve => {
-        request.get(url, (error, response, body) => {
-            if(!error && response.statusCode === 200) {
-                twitter.post('media/upload', { media_data: body }, (error, data) => {
-                    if(error) resolve('NOT_UPLOADED');
-                    else resolve(data.media_id_string);
-                }); 
-            } else resolve('NOT_UPLOADED');
-        });
-    });
-}
-
-/**
- * Checks if a link has already been tweeted in the last 7 days
- * This function is still a prototype and may resolve to false with some already tweeted links
- * @param {string} [url] The post's url
- * @returns Unrejectable promise resolving to the uploaded media id Unrejectable promise resolving to true if a URL has already been tweeted and false otherwise
- */
-function isAlreadyTweeted(url) {
-    return new Promise(resolve => {
-        // Tweet-like posts
-        if(!url) resolve(false);
-        // The Twitter Search API is a mess, can't handle the @ character
-        const urlAllowedParts = url.split('@');
-        const query = { q: 'url:' + urlAllowedParts[urlAllowedParts.length - 1], count: 100, result_type: 'recent' };
-        twitter.get('search/tweets', query, (err, data, response) => {
-            if(err) resolve(false);
-            else resolve(data.statuses.some(tweet => tweet.user.screen_name === twitter_handle));
-        });
+    }).catch(err => {
+        console.error('Error:', err.message, 'with', request_nodes[0]);
+        // Putting the node element at the end of the array
+        request_nodes.push(request_nodes.shift());
+        steemRequest.api.setOptions({ url: request_nodes[0] });
+        console.log('Retrying with', request_nodes[0]);
+        processOperation(author, permlink, type);
     });
 }
 
@@ -245,116 +198,4 @@ function getWebsite(app, author, permlink, url, tags, body) {
         default:
             return 'steemit.com' + url;
     }
-}
-
-/**
- * Processes a reblog operation or a comment operation
- * @param {string} author The post's author
- * @param {string} permlink The post's permlink
- * @param {string} type The post's type (reblog or comment)
- */
-function processOperation(author, permlink, type) {
-    new Promise((resolve, reject) => {
-        // Getting the content of the post
-        steemRequest.api.getContent(author, permlink, (err, result) => {
-            if(err) return reject(err);
-            // If the operation is a comment operation, it must be a post creation, not a post update
-            else if(type === 'reblog' || type === 'comment' /*&& result.last_update === result.created*/) {
-                let metadata;
-                try {
-                    metadata = JSON.parse(result.json_metadata);
-                    if(!metadata) throw new Error('The metadata is ', metadata);
-                    if(typeof metadata !== 'object') throw new Error('The metadata is of type ' + typeof metadata);
-                } catch(err) {
-                    return reject(err);
-                }
-                let website, templateType;
-                // Twitter-like posts
-                if(settings.advanced_mode_steem_accounts.includes(author) && /^(?:\s*!\[[^\]]*]\([^)]*\))*\s*$/.test(result.body)) {
-                    website = '';
-                    templateType = 'tweet_like';
-                // First parameter (app): checking for all the known ways of specifying an app, if none of them exists the app is set to undefined
-                } else {
-                    website = getWebsite(metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined, result.author, result.permlink, result.url, metadata.tags, result.body);
-                    templateType = (type === 'reblog' ? 'resteem': 'post')
-                }
-                // If tweeting has been allowed for posts from this website
-                if(website !== null) {
-                    const tweetTemplate = template[templateType];
-                    const values = {
-                        author: author,
-                        link: website === '' ? '' : '%' + '_'.repeat(LINK_LENGTH - 2) + '%',
-                        tags: metadata.tags || result.category,
-                        title: result.title
-                    }
-                    let tweetStructure = parser.parse(tweetTemplate, values);
-                    while(tweetStructure.parsed.length > MAX_TWEET_LENGTH) {
-                        tweetStructure = removeLeastImportant(tweetStructure);
-                    }
-                    tweetStructure.parsed = tweetStructure.parsed.replace(values.link, website);
-                    if(templateType === 'tweet_like') tweetStack.push([{ status: tweetStructure.parsed, media_ids: metadata.image || [] }]);
-                    else tweetStack.push([{ status: tweetStructure.parsed }, website]);
-                }
-            }
-        });
-    }).catch(err => {
-        console.error('Error:', err.message, 'with', request_nodes[0]);
-        // Putting the node element at the end of the array
-        request_nodes.push(request_nodes.shift());
-        steemRequest.api.setOptions({ url: request_nodes[0] });
-        console.log('Retrying with', request_nodes[0]);
-        processOperation(author, permlink, type);
-    });
-}
-
-/**
- * Removes or modifies the least important element from a structure
- * @param {object} structure The structure of the part of a tweet
- * @returns {object} The passed structure with one modified element
- */
-function removeLeastImportant(structure) {
-    if(structure.children.length > 0) {
-        const leastImportantChild = structure.children[structure.children.length - 1];
-        const originalLeastImportantChildParsed = leastImportantChild.parsed;
-        if(leastImportantChild.children.length > 0) {
-            leastImportantChild = removeLeastImportant(leastImportantChild);
-            structure.parsed = structure.parsed.replace(originalLeastImportantChildParsed, leastImportantChild.parsed);
-        } else {
-            switch(leastImportantChild.variable) {
-                case 'tags':
-                    // If set to true, removes tags by order of importance (last tag removed first)
-                    if(settings.tags.remove_tags_by_order) leastImportantChild.parsed = leastImportantChild.parsed.replace(/ ?#[A-Za-z\d-]+$/, '');
-                    // If set to true, removes tags by order of importance (first tag removed first)
-                    else if(settings.tags.remove_tags_by_order_opposite) leastImportantChild.parsed = leastImportantChild.parsed.replace(/^#[A-Za-z\d-]+ ?/, '');
-                    // If set to true, removes tags by length (smallest removed first)
-                    else if(settings.tags.remove_tags_by_length) {
-                        const tags = leastImportantChild.parsed.split(' ');
-                        const smallestTag = tags.reduce((a, b) => a.length < b.length ? a : b);
-                        leastImportantChild.parsed = tags.filter(tag => tag !== smallestTag).join(' ');
-                    // If set to true, removes tags by length (longest removed first)
-                    } else if(settings.tags.remove_tags_by_length_opposite) {
-                        const tags = leastImportantChild.parsed.split(' ');
-                        const longestTag = tags.reduce((a, b) => a.length > b.length ? a : b);
-                        leastImportantChild.parsed = tags.filter(tag => tag !== longestTag).join(' ');
-                    } else leastImportantChild.parsed = '';
-                    break;
-                case 'title':
-                    leastImportantChild.parsed = leastImportantChild.parsed.replace(/.(.{3})$/, (match, lastChars) => {
-                        if(lastChars === '...') return '...';
-                        else return match[0] + '...';
-                    });
-                    if(leastImportantChild.parsed === '...') leastImportantChild.parsed = '';
-                    break;
-                default:
-                    leastImportantChild.parsed = '';
-                    break;
-            }
-            structure.parsed = structure.parsed.replace(originalLeastImportantChildParsed, leastImportantChild.parsed).replace(/ +/, ' ');
-            if(leastImportantChild.parsed === '') {
-                structure.raw = structure.raw.replace(leastImportantChild.raw, '').replace(/ +/, ' ');
-                structure.children.pop();
-            }
-        }
-    }
-    return structure;
 }
