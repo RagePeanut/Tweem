@@ -82,6 +82,7 @@ Website | Label | Official description | Posting | Viewing
 **[dMania](https://dmania.lol/)** | dmania | Make money with memes, funny pictures and videos. | **✓** | ✓
 **[DSound](https://dsound.audio/)** | dsound | Decentralized Sound Platform. | **✓** | ✓
 **[DTube](https://d.tube/)** | dtube | The first crypto-decentralized video platform, built on top of the **STEEM** Blockchain and the **IPFS** peer-to-peer network. | **✓** | ✓
+**[eSteem](https://esteem.app/) | esteem | Blog, vote, share pictures and get paid. | **✓** | **✓**
 **[Fundition](https://fundition.io/)** | fundition | A next-generation, decentralized, peer-to-peer crowdfunding and collaboration platform. | **✓** | ✓
 **[Głodni Wiedzy](https://glodniwiedzy.pl/)** | glodniwiedzy | Dedicated Polish Steem user interface for displaying content of selected users. | ✗ | ✓
 **[Hede](https://hede.io/)** | hede | Knowledge Sharing Dictionary. | **✓** | ✓
@@ -90,7 +91,9 @@ Website | Label | Official description | Posting | Viewing
 **[Memeit.LOL](https://memeit.lol/)** | memeit.lol | A creative platform you can use to create your own meme and post it on the Steem Blockchain. | **✓** | ✓
 **[mTasks](https://steemmtask.herokuapp.com/)** | mTasks | A Fiverr like platform built on top of **STEEM** Blockchain. | **✓** | ✓
 **[Parley](https://www.parley.io/)** | parley | The place where conversations happen. | **✓** | ✓
-**[Steemd](https://steemit.com)** | steemd | A blockchain explorer for the **STEEM** blockchain. | ✗ | **✓**
+**[Partiko](https://partiko.app/)** | partiko | Fast and beautiful Steem on the go. | **✓** | **✓**
+**[Share2Steem](https://share2steem.com/) | share2steem | Cross-post your public social publications to a Steemit account. | **✓** | ✗
+**[Steemd](https://steemd.com)** | steemd | A blockchain explorer for the **STEEM** blockchain. | ✗ | **✓**
 **[SteemDB](https://steemdb.com/)** | steemdb | Block explorer and database for the **STEEM** blockchain. | ✗ | **✓**
 **[SteemGigs](https://steemgigs.org/)** | steemgig | A Revolutionary Decentralized Freelance Marketplace With Its Own Knowledge-Bank. |**✓** | ✓
 **[Steemhunt](https://steemhunt.com/)** | steemhunt | A Steem Fueled Product Hunt. | **✓** | ✓

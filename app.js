@@ -65,24 +65,21 @@ function processOperation(author, permlink, type) {
                 } catch(err) {
                     return reject(err);
                 }
-                let website, templateType;
+                let templateType;
                 // Tweet-like posts
-                if(settings.advanced_mode_steem_accounts.includes(author) && /^(?:\s*!\[[^\]]*]\([^)]*\))*\s*$/.test(result.body)) {
-                    website = '';
-                    templateType = 'tweet_like';
-                // First parameter (app): checking for all the known ways of specifying an app, if none of them exists the app is set to undefined
-                } else {
-                    website = getWebsite(metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined, result.author, result.permlink, result.url, metadata.tags, result.body);
-                    templateType = (type === 'reblog' ? 'resteem': 'post')
-                }
+                if(settings.advanced_mode_steem_accounts.includes(author) && /^(?:\s*!\[[^\]]*]\([^)]*\))*\s*$/.test(result.body)) templateType = 'tweet_like';
+                else templateType = (type === 'reblog' ? 'resteem': 'post');
+                // Checking for all the known ways of specifying an app, if none of them exists the app is set to undefined
+                const app = metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined;
+                let website = getWebsite(app, result.author, result.permlink, result.url, metadata.tags, result.body);
                 // If posting has been allowed for posts from this website
-                if(website !== null) {
+                if(website) {
                     for(let target in social_networks) {
                         if(social_networks[target]) {
                             const values = {
                                 author: author,
                                 link: website === '' ? '' : '%' + '_'.repeat(targets[target].LINK_LENGTH - 2) + '%',
-                                tags: metadata.tags || result.category,
+                                tags: metadata.tags || [result.category],
                                 title: result.title
                             }
                             let structure = parser.parse(template[templateType], values);
@@ -90,7 +87,7 @@ function processOperation(author, permlink, type) {
                                 structure = parser.removeLeastImportant(structure);
                             }
                             structure.parsed = structure.parsed.replace(values.link, website);
-                            targets[target].add(templateType === 'tweet_like', structure.parsed, website || metadata.image || []);
+                            targets[target].add(templateType === 'tweet_like', structure.parsed, templateType === 'tweet_like' ? metadata.image || [] : website);
                         }
                     }
                 }
@@ -114,22 +111,28 @@ function processOperation(author, permlink, type) {
  * @param {string} url The post's url (from the blockchain)
  * @param {string[]} tags The post's tags
  * @param {string} body The post's body
- * @returns {string} Link associated to the post
+ * @returns {string|null} Link associated to the post
  */
 function getWebsite(app, author, permlink, url, tags, body) {
-    if(!app || !settings.allowed_apps[app]) {
+    if(!app) {
         // Special case for the Głodni Wiedzy app
         if(author == 'glodniwiedzy') app = author;
         // Special case for the Knacksteem app
         else if(tags[0] === 'knacksteem') app = tags[0];
-        else return null;
     }
-    if(settings.allowed_apps[app] === 1) app = settings.default_app;
+    if(settings.allowed_apps[app] === 0) return null;
+    else if(settings.allowed_apps[app] === 1) {
+        const allowedDefaultApps = ['blockpress', 'busy', 'insteem', 'steemd', 'steemdb', 'steemit', 'steemkr', 'steempeak', 'strimi', 'ulogs', 'uneeverso'];
+        app = settings.default_app;
+        // If the app specified in settings.default_app doesn't exist, doesn't support viewing posts, isn't yet supported or isn't correctly written, use Steemit for the link
+        if(!allowedDefaultApps.includes(app) && settings.allowed_apps[app] !== 2) app = 'steemit';
+    }
     switch(app) {
         case 'bescouted':
             // Bescouted links don't follow the Steem apps logic, therefore the link has to be fetched from the body
-            // If the user removed the website link, the post is treated as a steemit post
-            return body.match(/\(?:https:\/\/www\.(bescouted\.com\/photo\/\d{8,}\/[\w-]+\/\d{8,})\/\)/)[0] || 'steemit.com' + url;
+            const link = body.match(/\(?:https:\/\/www\.(bescouted\.com\/photo\/\d{8,}\/[\w-]+\/\d{8,})\/\)/)[0];
+            // If the user removed the website link, the post is linked to the default app
+            if(link) return link;
         case 'blockdeals':
             return 'blockdeals.org' + url;
         case 'blockpress':
@@ -194,8 +197,7 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'www.vimm.tv/@' + author;
         case 'zappl':
             return 'zappl.com/' + url.split('/')[1] + '/' + author + '/' + permlink;
-        // If the app specified in settings.default_app doesn't exist, doesn't support viewing posts, isn't yet supported or isn't correctly written, use Steemit for the link
-        // Apps that get a steemit.com link: steemit, dbooks, chainbb, esteem, masdacs, steemauto, steempress, postpromoter, Steem Harry Games, vote-buyer, steemjs, piston-lib, undefined
+        // Apps that get a steemit.com link: steemit, dbooks, chainbb, esteem, masdacs, steemauto, steempress, share2steem, postpromoter, Steem Harry Games, vote-buyer, steemjs, piston-lib, undefined
         // The list of supported apps is manually updated. If an app is missing, please contact me through any of the means specified in the README file or send a new issue
         default:
             return 'steemit.com' + url;
