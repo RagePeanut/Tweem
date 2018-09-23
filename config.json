@@ -6,6 +6,9 @@
         "https://rpc.curiesteem.com"
     ],
     "settings": {
+        "advanced_mode_steem_accounts": [
+            "ragepeanut"
+        ],
         "allowed_apps": {
             "bescouted": 2,
             "blockdeals": 2,
@@ -41,6 +44,8 @@
             "remove_mentions": false,
             "remove_mentions_at_char": false
         },
+        "post_frequency_minutes": 0,
+        "post_retry_timeout": 10000,
         "tags": {
             "check_for_duplicate": true,
             "limit": false,
@@ -48,8 +53,10 @@
             "remove_tags_by_length_opposite": false,
             "remove_tags_by_order": true,
             "remove_tags_by_order_opposite": false
-        },
-        "tweet_frequency_minutes": 0
+        }
+    },
+    "social_networks": {
+        "twitter": true
     },
     "steem_accounts": {
         "posts": [
@@ -66,8 +73,8 @@
     ],
     "template": {
         "post": "{title}::1 {tags}::2 {link}",
-        "resteem": "{title}::1 [by {author}]::3 {tags}::2 {link}"
+        "resteem": "{title}::1 [by {author}]::3 {tags}::2 {link}",
+        "tweet_like": "{title} {tags}::1"
     },
-    "tweet_retry_timeout": 10000,
     "twitter_handle": "RagePeanut_"
 }
