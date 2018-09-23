@@ -46,9 +46,9 @@ Here are all the configuration possibilities:
     * ***remove_tags_by_length_opposite:*** remove tags by length (longest removed first) if the post is too long (default: false)
     * ***remove_tags_by_order:*** remove tags by order of importance (last tag removed first) if the post is too long (default: true)
     * ***remove_tags_by_order_opposite:*** remove tags by their opposite order of importance (first tags removed first) if the post is too long (default: false)
+* **social_networks:** the social networks to which **Tweem** should post (true = post, false = don't post, default: true)
 * **steem_accounts:** lists of Steem accounts to react to when they post (posts) and/or when they resteem (resteems) (default: ["ragepeanut"] and ["ragepeanut"])
 * **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
-* **targets:** the social networks to which **Tweem** should post (true = post, false = don't post, default: true)
 * **template:** templates for the posts (explained in 'Create your own template')
   * ***post:*** template for posts related to posts
   * ***resteem:*** template for posts related to resteems

@@ -55,6 +55,9 @@
             "remove_tags_by_order_opposite": false
         }
     },
+    "social_networks": {
+        "twitter": true
+    },
     "steem_accounts": {
         "posts": [
             "ragepeanut"
@@ -68,9 +71,6 @@
         "https://rpc.steemviz.com",
         "https://steemd.minnowsupportproject.org"
     ],
-    "targets": {
-        "twitter": true
-    },
     "template": {
         "post": "{title}::1 {tags}::2 {link}",
         "resteem": "{title}::1 [by {author}]::3 {tags}::2 {link}",

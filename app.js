@@ -2,8 +2,11 @@ const steemStream = require('steem');
 const steemRequest = require('steem');
 
 const parser = require('./utils/parser');
+const targets = {
+    twitter: require('./targets/twitter')
+}
 
-const { request_nodes, settings, steem_accounts, stream_nodes, targets, template } = require('./config');
+const { request_nodes, settings, social_networks, steem_accounts, stream_nodes, template } = require('./config');
 
 steemRequest.api.setOptions({ url: request_nodes[0] });
 
@@ -74,21 +77,20 @@ function processOperation(author, permlink, type) {
                 }
                 // If posting has been allowed for posts from this website
                 if(website !== null) {
-                    for(let tgt in targets) {
-                        if(targets[tgt]) {
-                            const target = require('./targets/' + tgt);
+                    for(let target in social_networks) {
+                        if(social_networks[target]) {
                             const values = {
                                 author: author,
-                                link: website === '' ? '' : '%' + '_'.repeat(target.LINK_LENGTH - 2) + '%',
+                                link: website === '' ? '' : '%' + '_'.repeat(targets[target].LINK_LENGTH - 2) + '%',
                                 tags: metadata.tags || result.category,
                                 title: result.title
                             }
                             let structure = parser.parse(template[templateType], values);
-                            while(structure.parsed.length > target.MAX_LENGTH) {
+                            while(structure.parsed.length > targets[target].MAX_LENGTH) {
                                 structure = parser.removeLeastImportant(structure);
                             }
                             structure.parsed = structure.parsed.replace(values.link, website);
-                            target.add(templateType === 'tweet_like', structure.parsed, website || metadata.image || []);
+                            targets[target].add(templateType === 'tweet_like', structure.parsed, website || metadata.image || []);
                         }
                     }
                 }
