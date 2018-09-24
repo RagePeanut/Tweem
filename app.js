@@ -27,11 +27,12 @@ function stream() {
                 const op = JSON.parse(operation[1].json);
                 // Checking if it's a resteem and if it's from one of the specified accounts
                 if(op[0] === 'reblog' && steem_accounts.resteems.includes(op[1].account)) {
-                    processOperation(op[1].author, op[1].permlink, op[0]);
+                    processOperation(op[1].author, op[1].permlink, 'resteem');
                 }
             // Checking if it's a post (not a comment) made by one of the specified accounts
-            } else if(operation[0] === 'comment' && steem_accounts.posts.includes(operation[1].author) && operation[1].parent_author === '') {
-                processOperation(operation[1].author, operation[1].permlink, operation[0]);
+            } else if(operation[0] === 'comment' && operation[1].parent_author === '') {
+                if(steem_accounts.tweet_like.includes(operation[1].author) && /^(?:\s*!\[[^\]]*]\([^)]*\))*\s*$/.test(operation[1].body)) processOperation(operation[1].author, operation[1].permlink, 'tweet_like');
+                else if(steem_accounts.posts.includes(operation[1].author)) processOperation(operation[1].author, operation[1].permlink, 'post');
             }
         });
     // If an error occured, add 1 to the index and put it at 0 if it is out of bound
@@ -48,7 +49,7 @@ function stream() {
  * Processes a reblog operation or a comment operation
  * @param {string} author The post's author
  * @param {string} permlink The post's permlink
- * @param {string} type The post's type (reblog or comment)
+ * @param {string} type The post's type (resteem, post or tweet_like)
  */
 function processOperation(author, permlink, type) {
     new Promise((resolve, reject) => {
@@ -56,7 +57,7 @@ function processOperation(author, permlink, type) {
         steemRequest.api.getContent(author, permlink, (err, result) => {
             if(err) return reject(err);
             // If the operation is a comment operation, it must be a post creation, not a post update
-            else if(type === 'reblog' || type === 'comment' && result.last_update === result.created) {
+            else if(type === 'resteem' || ['post', 'tweet_like'].includes(type) && result.last_update === result.created) {
                 let metadata;
                 try {
                     metadata = JSON.parse(result.json_metadata);
@@ -65,10 +66,6 @@ function processOperation(author, permlink, type) {
                 } catch(err) {
                     return reject(err);
                 }
-                let templateType;
-                // Tweet-like posts
-                if(settings.advanced_mode_steem_accounts.includes(author) && /^(?:\s*!\[[^\]]*]\([^)]*\))*\s*$/.test(result.body)) templateType = 'tweet_like';
-                else templateType = (type === 'reblog' ? 'resteem': 'post');
                 // Checking for all the known ways of specifying an app, if none of them exists the app is set to undefined
                 const app = metadata.community || (metadata.app && (metadata.app.name || metadata.app.split('/')[0])) || undefined;
                 let website = getWebsite(app, result.author, result.permlink, result.url, metadata.tags, result.body);
@@ -82,12 +79,12 @@ function processOperation(author, permlink, type) {
                                 tags: metadata.tags || [result.category],
                                 title: result.title
                             }
-                            let structure = parser.parse(template[templateType], values);
+                            let structure = parser.parse(template[type], values);
                             while(structure.parsed.length > targets[target].MAX_LENGTH) {
                                 structure = parser.removeLeastImportant(structure);
                             }
                             structure.parsed = structure.parsed.replace(values.link, website);
-                            targets[target].add(templateType === 'tweet_like', structure.parsed, templateType === 'tweet_like' ? metadata.image || [] : website);
+                            targets[target].add(type === 'tweet_like', structure.parsed, type === 'tweet_like' ? metadata.image || [] : website);
                         }
                     }
                 }

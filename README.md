@@ -30,7 +30,6 @@ Before starting the bot, it is recommended to take a look at the config file and
 Here are all the configuration possibilities:
 * **request_nodes:** list of RPC nodes to be used by the app to get posts informations (those need to be full nodes)
 * **settings:**
-  * ***advanced_mode_steem_accounts:*** list of accounts that get **Twitter**-like posts crossposted to **Twitter** instead of shared (default: ["ragepeanut"])
   * ***allowed_apps:*** lets you decide how posts from various apps will be linked (0: not posted, 1: posted with a link to the post on the *default_app*, 2: posted with a link to the post on the app it comes from)
   * ***default_app:*** default app to be used when an app is not yet supported or has been set to 1 in *allowed_apps*. The value has to correspond to one of the labels in the supported apps table below.
   * ***mentions:***
@@ -47,7 +46,7 @@ Here are all the configuration possibilities:
     * ***remove_tags_by_order:*** remove tags by order of importance (last tag removed first) if the post is too long (default: true)
     * ***remove_tags_by_order_opposite:*** remove tags by their opposite order of importance (first tags removed first) if the post is too long (default: false)
 * **social_networks:** the social networks to which **Tweem** should post (true = post, false = don't post, default: true)
-* **steem_accounts:** lists of Steem accounts to react to when they post (posts) and/or when they resteem (resteems) (default: ["ragepeanut"] and ["ragepeanut"])
+* **steem_accounts:** lists of Steem accounts to react to when they post (posts and tweet_like) and/or when they resteem (resteems) (default: ["ragepeanut"], ["ragepeanut"] and ["happypeanut"])
 * **stream_nodes:** list of RPC nodes to be used by the app to stream operations (those can be low memory nodes)
 * **template:** templates for the posts (explained in 'Create your own template')
   * ***post:*** template for posts related to posts

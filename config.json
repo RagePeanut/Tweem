@@ -6,9 +6,6 @@
         "https://rpc.curiesteem.com"
     ],
     "settings": {
-        "advanced_mode_steem_accounts": [
-            "ragepeanut"
-        ],
         "allowed_apps": {
             "bescouted": 2,
             "blockdeals": 2,
@@ -67,6 +64,9 @@
         ],
         "resteems": [
             "ragepeanut"
+        ],
+        "tweet_like": [
+            "happypeanut"
         ]
     },
     "stream_nodes": [
