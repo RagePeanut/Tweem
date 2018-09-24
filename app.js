@@ -140,12 +140,6 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'coogger.com/@' + author + '/' + permlink;
         case 'dlike':
             return 'dlike.io/post/' + author + '/' + permlink;
-        case 'dlive':
-            // Links for videos and livestreams don't have the same structure, the only way to check which one the post is is to check the post tags
-            // DLive automatically transforms livestream links to video links when accessed once the livestream ended so the app doesn't have to check for that
-            if(tags.includes('dlive-broadcast')) return 'dlive.io/livestream/' + author + '/' + permlink;
-            if(tags.includes('dlive-video')) return 'dlive.io/video/' + author + '/' + permlink;
-            // If the user changed the identifying tag, the post is treated as a steemit post
         case 'dmania':
             return 'dmania.lol/post/' + author + '/' + permlink;
         case 'dsound':
