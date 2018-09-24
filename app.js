@@ -75,7 +75,7 @@ function processOperation(author, permlink, type) {
                         if(social_networks[target]) {
                             const values = {
                                 author: author,
-                                link: website === '' ? '' : '%' + '_'.repeat(targets[target].LINK_LENGTH - 2) + '%',
+                                link: '%' + '_'.repeat(targets[target].LINK_LENGTH - 2) + '%',
                                 tags: metadata.tags || [result.category],
                                 title: result.title
                             }
@@ -118,7 +118,7 @@ function getWebsite(app, author, permlink, url, tags, body) {
         else if(tags[0] === 'knacksteem') app = tags[0];
     }
     if(settings.allowed_apps[app] === 0) return null;
-    else if(settings.allowed_apps[app] === 1) {
+    if(settings.allowed_apps[app] === 1) {
         const allowedDefaultApps = ['blockpress', 'busy', 'insteem', 'steemd', 'steemdb', 'steemit', 'steemkr', 'steempeak', 'strimi', 'ulogs', 'uneeverso'];
         app = settings.default_app;
         // If the app specified in settings.default_app doesn't exist, doesn't support viewing posts, isn't yet supported or isn't correctly written, use Steemit for the link
