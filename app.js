@@ -31,8 +31,9 @@ function stream() {
                 }
             // Checking if it's a post (not a comment) made by one of the specified accounts
             } else if(operation[0] === 'comment' && operation[1].parent_author === '') {
-                if(steem_accounts.tweet_like.includes(operation[1].author) && /^(?:\s*!\[[^\]]*]\([^)]*\))*\s*$/.test(operation[1].body)) processOperation(operation[1].author, operation[1].permlink, 'tweet_like');
-                else if(steem_accounts.posts.includes(operation[1].author)) processOperation(operation[1].author, operation[1].permlink, 'post');
+                const tweetLike = /^(?:\s*!\[[^\]]*]\([^)]*\))*\s*$/.test(operation[1].body);
+                if(tweetLike && steem_accounts.tweet_like.includes(operation[1].author)) processOperation(operation[1].author, operation[1].permlink, 'tweet_like');
+                else if(!tweetLike && steem_accounts.posts.includes(operation[1].author)) processOperation(operation[1].author, operation[1].permlink, 'post');
             }
         });
     // If an error occured, add 1 to the index and put it at 0 if it is out of bound
@@ -57,7 +58,7 @@ function processOperation(author, permlink, type) {
         steemRequest.api.getContent(author, permlink, (err, result) => {
             if(err) return reject(err);
             // If the operation is a comment operation, it must be a post creation, not a post update
-            else if(type === 'resteem' || ['post', 'tweet_like'].includes(type) && result.last_update === result.created) {
+            else if(type === 'resteem' || result.last_update === result.created) {
                 let metadata;
                 try {
                     metadata = JSON.parse(result.json_metadata);
