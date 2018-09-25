@@ -19,7 +19,7 @@ const MAX_IMAGE_COUNT = 4;
 
 // Sending tweets with a specified delay between them
 const stack = [];
-let tweetsInterval = setInterval(processTweet, settings.post_frequency_minutes * 60 * 1000);
+let tweetsInterval = setInterval(processTweet, 0);
 
 /**
  * Tweets if the related URL hasn't been tweeted yet
