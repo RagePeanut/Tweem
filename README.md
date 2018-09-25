@@ -80,6 +80,7 @@ Website | Label | Official description | Posting | Viewing
 **[Coogger](http://www.coogger.com/)** | coogger | An information sharing network that works with multiple applications. | **✓** | ✓
 **[dlike](https://dlike.io/)** | dlike | Share What You Like. | **✓** | ✓
 **[dMania](https://dmania.lol/)** | dmania | Make money with memes, funny pictures and videos. | **✓** | ✓
+**[dPoll](https://dpoll.xyz/)** | dpoll | Decentralized poll app on top of the STEEM blockchain. | **✓** | ✓
 **[DSound](https://dsound.audio/)** | dsound | Decentralized Sound Platform. | **✓** | ✓
 **[DTube](https://d.tube/)** | dtube | The first crypto-decentralized video platform, built on top of the **STEEM** Blockchain and the **IPFS** peer-to-peer network. | **✓** | ✓
 **[eSteem](https://esteem.app/)** | esteem | Blog, vote, share pictures and get paid. | **✓** | **✓**

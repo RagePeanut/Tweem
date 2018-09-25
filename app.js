@@ -81,6 +81,7 @@ function processOperation(author, permlink, type) {
                             coogger: /$coogger^/,
                             dlike: /$dlike(-[A-Za-z]+)?^/,
                             dmania: /$dmania^/,
+                            dpoll: /$dpoll^/,
                             dsound: /$dsound^/,
                             dtube: /$dtube^/,
                             esteem: /$esteem^/,
@@ -175,6 +176,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'dlike.io/post/' + author + '/' + permlink;
         case 'dmania':
             return 'dmania.lol/post/' + author + '/' + permlink;
+        case 'dpoll':
+            return 'dpoll.xyz/detail/@' + author + '/' + permlink;
         case 'dsound':
             return 'dsound.audio/#!/@' + author + '/' + permlink;
         case 'dtube':
