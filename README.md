@@ -40,6 +40,7 @@ Here are all the configuration possibilities:
   * ***post_retry_timeout:*** time in milliseconds to wait for before retrying to post to a social network if it failed (default: 10000)
   * ***tags:***
     * ***check_for_duplicate:*** check for duplicate tags and remove them (default: true)
+    * ***filtered_out:*** tags to be removed from the post's tags (default: [])
     * ***limit:*** limit of tags to be included in the post, represented by a number or false if no limit is wanted (default: false)
     * ***remove_app_tags:*** removes the tags specific to the posting app used by the author (default: true)
     * ***remove_tags_by_length:*** remove tags by length (smallest removed first) if the post is too long (default: false)
