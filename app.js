@@ -72,7 +72,8 @@ function processOperation(author, permlink, type) {
                 let website = getWebsite(app, result.author, result.permlink, result.url, metadata.tags, result.body);
                 // If posting has been allowed for posts from this website
                 if(website) {
-                    let tags = (metadata.tags || [result.category]).filter(tag => !settings.tags.filtered_out.includes(tag));
+                    let tags = (metadata.tags || [result.category]).filter(tag => !settings.tags.filtered_out.includes(tag))
+                                                                   .map(tag => tag.replace('-', '_'));
                     if(settings.tags.remove_app_tags && app) {
                         const appTags = {
                             bescouted: /$bescouted^/,
