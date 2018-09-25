@@ -20,7 +20,7 @@
             "glodniwiedzy": 2,
             "hede": 2,
             "knacksteem": 2,
-            "memeit.lol": 2,
+            "memeit.lol": 1,
             "mTasks": 2,
             "parley": 2,
             "partiko": 2,
@@ -48,6 +48,7 @@
         "tags": {
             "check_for_duplicate": true,
             "limit": false,
+            "remove_app_tags": true,
             "remove_tags_by_length": false,
             "remove_tags_by_length_opposite": false,
             "remove_tags_by_order": true,

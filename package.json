@@ -1,6 +1,6 @@
 {
   "name": "tweem",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A bot sharing and/or crossposting all your resteems and/or recent posts to your favorite social networks.",
   "main": "app.js",
   "scripts": {
