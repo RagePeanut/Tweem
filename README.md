@@ -1,4 +1,4 @@
-# Tweem (0.2.3)
+# Tweem (0.2.4)
 Tweem is a bot that automatically shares all the resteems and/or recent posts of specified accounts to your favorite social networks, it can also crosspost your tweet-like posts.
 
 ## Deploy
@@ -40,8 +40,9 @@ Here are all the configuration possibilities:
   * ***post_retry_timeout:*** time in milliseconds to wait for before retrying to post to a social network if it failed (default: 10000)
   * ***tags:***
     * ***check_for_duplicate:*** check for duplicate tags and remove them (default: true)
-    * ***filtered_out:*** tags to be removed from the post's tags (default: [])
+    * ***filter_out:*** tags to be removed from the post's tags (default: [])
     * ***limit:*** limit of tags to be included in the post, represented by a number or false if no limit is wanted (default: false)
+    * ***propagate:*** tags to be added when encountering specific tags. This setting is an object with tag names as its properties and an array of tags to add as its values. (default: {})
     * ***remove_app_tags:*** removes the tags specific to the posting app used by the author (default: true)
     * ***remove_tags_by_length:*** remove tags by length (smallest removed first) if the post is too long (default: false)
     * ***remove_tags_by_length_opposite:*** remove tags by length (longest removed first) if the post is too long (default: false)

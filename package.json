@@ -1,6 +1,6 @@
 {
   "name": "tweem",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A bot sharing and/or crossposting all your resteems and/or recent posts to your favorite social networks.",
   "main": "app.js",
   "scripts": {
@@ -20,8 +20,8 @@
   "license": "MIT",
   "dependencies": {
     "request": "^2.88.0",
-    "steem": "^0.7.1",
-    "twit": "^2.2.9"
+    "steem": "^0.7.2",
+    "twit": "^2.2.11"
   },
   "engines": {
     "node": "8.6.0"

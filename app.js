@@ -72,40 +72,7 @@ function processOperation(author, permlink, type) {
                 let website = getWebsite(app, result.author, result.permlink, result.url, metadata.tags, result.body);
                 // If posting has been allowed for posts from this website
                 if(website) {
-                    let tags = (metadata.tags || [result.category]).filter(tag => !settings.tags.filtered_out.includes(tag))
-                                                                   .map(tag => tag.replace('-', '_'));
-                    if(settings.tags.remove_app_tags && app) {
-                        const appTags = {
-                            bescouted: /$bescouted^/,
-                            blockdeals: /$blockdeals(-[a-z]+)?^/,
-                            busy: /$busy^/,
-                            coogger: /$coogger^/,
-                            dlike: /$dlike(-[A-Za-z]+)?^/,
-                            dmania: /$dmania^/,
-                            dpoll: /$dpoll^/,
-                            dsound: /$dsound^/,
-                            dtube: /$dtube^/,
-                            esteem: /$esteem^/,
-                            fundition: /$((my|up)fundition|fundition-[a-z\d])+^/,
-                            hede: /$hede-io^/,
-                            knacksteem: /$knacksteem^/,
-                            'memeit.lol': /$memeitlol^/,
-                            mTasks: /$mtasks^/,
-                            parley: /$parley(-[a-z]+)?^/,
-                            partiko: /$partiko^/,
-                            share2steem: /$share2steem^/,
-                            steemgig: /$steemgigs?^/,
-                            steemhunt: /$steemhunt^/,
-                            steepshot: /$steepshot^/,
-                            strimi: /$strim(-[a-z]+)?^/,
-                            ulogs: /$ulog(-[a-z-]+)?^/,
-                            utopian: /$utopian-io^/,
-                            'vimm.tv': /$vimmtv(broadcast)?^/,
-                            zappl: /$zappl^/
-                        }
-                        // Filtering out app tags for the post's posting app
-                        if(appTags[app]) tags = tags.filter(tag => !appTags[app].test(tag));
-                    }
+                    const tags = (metadata.tags || [result.category]);
                     for(let target in social_networks) {
                         if(social_networks[target]) {
                             const values = {

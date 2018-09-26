@@ -48,10 +48,11 @@
         "post_retry_timeout": 10000,
         "tags": {
             "check_for_duplicate": true,
-            "filtered_out": [
+            "filter_out": [
                 "fr"
             ],
             "limit": false,
+            "propagate": {},
             "remove_app_tags": true,
             "remove_tags_by_length": false,
             "remove_tags_by_length_opposite": false,
