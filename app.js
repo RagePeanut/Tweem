@@ -72,7 +72,16 @@ function processOperation(author, permlink, type) {
                 let website = getWebsite(app, result.author, result.permlink, result.url, metadata.tags, result.body);
                 // If posting has been allowed for posts from this website
                 if(website) {
-                    const tags = (metadata.tags || [result.category]);
+                    let tags = metadata.tags || [result.category];
+                    // Special case for Zappl posts
+                    if(app === 'zappl' && type !== 'tweet_like' && steem_accounts.tweet_like.includes(author)) {
+                        const zap = result.body.match(/<p[^>]*>([\s\S]+)<\/p>/);
+                        if(zap) {
+                            // Removing end of text hashtags to avoid duplicates as much as possible
+                            result.title = zap[1].replace(/<br( \/)?>/g, '\n').replace(/(#\w+ *)+$/, '');
+                            type = 'tweet_like';
+                        }
+                    }
                     for(let target in social_networks) {
                         if(social_networks[target]) {
                             const values = {
@@ -115,7 +124,7 @@ function processOperation(author, permlink, type) {
 function getWebsite(app, author, permlink, url, tags, body) {
     if(!app) {
         // Special case for the Głodni Wiedzy app
-        if(author == 'glodniwiedzy') app = author;
+        if(author === 'glodniwiedzy') app = author;
         // Special case for the Knacksteem app
         else if(tags[0] === 'knacksteem') app = tags[0];
     }

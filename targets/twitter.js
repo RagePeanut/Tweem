@@ -64,7 +64,7 @@ function processTweet() {
         const [params, url] = stack.shift();
         if(url) tweet(params, url);
         else {
-            Promise.all(params.media_ids.slice(0, MAX_IMAGE_COUNT).map(url => uploadImage(url)))
+            Promise.all(params.media_ids.filter(url => url !== '').slice(0, MAX_IMAGE_COUNT).map(url => uploadImage(url)))
                    .then(media_ids => {
                        params.media_ids = media_ids.filter(id => id !== 'NOT_UPLOADED');
                        tweet(params);
