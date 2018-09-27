@@ -1,4 +1,4 @@
-# Tweem (0.2.4)
+# Tweem (0.2.5)
 Tweem is a bot that automatically shares all the resteems and/or recent posts of specified accounts to your favorite social networks, it can also crosspost your tweet-like posts.
 
 ## Deploy

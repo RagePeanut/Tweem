@@ -31,7 +31,8 @@ function stream() {
                 }
             // Checking if it's a post (not a comment) made by one of the specified accounts
             } else if(operation[0] === 'comment' && operation[1].parent_author === '') {
-                const tweetLike = /^(?:\s*!\[[^\]]*]\([^)]*\))*\s*$/.test(operation[1].body);
+                // Regex tests for body containing nothing, only images or only a link to a YouTube video
+                const tweetLike = /^((\s*!\[[^\]]*]\([^)]+\))*|\s*((https?:\/\/)?((www|m)\.)?)?youtu(be\.com\/(watch\?v=|embed\/)|\.be\/)[\w-]{10}[048AEIMQUYcgkosw]((\?|&(amp;)?)[^\s&?]+)*)\s*$/.test(operation[1].body);
                 if(tweetLike && steem_accounts.tweet_like.includes(operation[1].author)) processOperation(operation[1].author, operation[1].permlink, 'tweet_like');
                 else if(!tweetLike && steem_accounts.posts.includes(operation[1].author)) processOperation(operation[1].author, operation[1].permlink, 'post');
             }
@@ -74,12 +75,22 @@ function processOperation(author, permlink, type) {
                 if(website) {
                     let tags = metadata.tags || [result.category];
                     // Special case for Zappl posts
-                    if(app === 'zappl' && type !== 'tweet_like' && steem_accounts.tweet_like.includes(author)) {
+                    if(app === 'zappl' && steem_accounts.tweet_like.includes(author)) {
                         const zap = result.body.match(/<p[^>]*>([\s\S]+)<\/p>/);
                         if(zap) {
                             // Removing end of text hashtags to avoid duplicates as much as possible
                             result.title = zap[1].replace(/<br( \/)?>/g, '\n').replace(/(#\w+ *)+$/, '');
                             type = 'tweet_like';
+                        }
+                    }
+                    if(type === 'tweet_like') {
+                        // Looking for a YouTube link in the title and shortening it
+                        let youtubeLink = result.title.match(/(?:(?:https?:\/\/)?(?:(?:www|m)\.)?)?youtu(?:be\.com\/(?:watch\?v=|embed\/)|\.be\/)([\w-]{10}[048AEIMQUYcgkosw])(?:(?:\?|&(amp;)?)[^\s&?]+)*/);
+                        if(youtubeLink) result.title = result.title.replace(youtubeLink[0], 'youtu.be/' + youtubeLink[1]);
+                        // Looking for a YouTube link in the body and adding a shortened version of it at the end of the title
+                        else {
+                            youtubeLink = result.body.match(/(?:(?:https?:\/\/)?(?:(?:www|m)\.)?)?youtu(?:be\.com\/(?:watch\?v=|embed\/)|\.be\/)([\w-]{10}[048AEIMQUYcgkosw])(?:(?:\?|&(amp;)?)[^\s&?]+)*/);
+                            if(youtubeLink) result.title += ' youtu.be/' + youtubeLink[1];
                         }
                     }
                     for(let target in social_networks) {
