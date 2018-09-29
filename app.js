@@ -73,40 +73,48 @@ function processOperation(author, permlink, type) {
                 let website = getWebsite(app, result.author, result.permlink, result.url, metadata.tags, result.body);
                 // If posting has been allowed for posts from this website
                 if(website) {
-                    let tags = metadata.tags || [result.category];
+                    const values = {
+                        app: app,
+                        author: author,
+                        tags: metadata.tags || [result.category],
+                        title: result.title
+                    }
+                    let endLink = '';
                     // Special case for Zappl posts
                     if(app === 'zappl' && steem_accounts.tweet_like.includes(author)) {
                         const zap = result.body.match(/<p[^>]*>([\s\S]+)<\/p>/);
                         if(zap) {
                             // Removing end of text hashtags to avoid duplicates as much as possible
-                            result.title = zap[1].replace(/<br( \/)?>/g, '\n').replace(/(#\w+ *)+$/, '');
+                            values.title = zap[1].replace(/<br( \/)?>/g, '\n').replace(/(#\w+ *)+$/, '');
                             type = 'tweet_like';
                         }
                     }
                     if(type === 'tweet_like') {
-                        // Looking for a YouTube link in the title and shortening it
-                        let youtubeLink = result.title.match(/(?:(?:https?:\/\/)?(?:(?:www|m)\.)?)?youtu(?:be\.com\/(?:watch\?v=|embed\/)|\.be\/)([\w-]{10}[048AEIMQUYcgkosw])(?:(?:\?|&(amp;)?)[^\s&?]+)*/);
-                        if(youtubeLink) result.title = result.title.replace(youtubeLink[0], 'youtu.be/' + youtubeLink[1]);
-                        // Looking for a YouTube link in the body and adding a shortened version of it at the end of the title
-                        else {
+                        // Looking for a YouTube link in the title, removing it from the title and shortening it
+                        let youtubeLink = values.title.match(/(?:(?:https?:\/\/)?(?:(?:www|m)\.)?)?youtu(?:be\.com\/(?:watch\?v=|embed\/)|\.be\/)([\w-]{10}[048AEIMQUYcgkosw])(?:(?:\?|&(amp;)?)[^\s&?]+)*/);
+                        if(youtubeLink) {
+                            endLink = ' youtu.be/' + youtubeLink[1];
+                            values.title = values.title.replace(youtubeLink[0], '');
+                            const youtubeIDRegex = new RegExp(youtubeLink[1]);
+                            metadata.image = (metadata.image || []).filter(url => !youtubeIDRegex.test(url))
+                        } else {
+                            // Looking for a YouTube link in the body and saving a shortened version of it
                             youtubeLink = result.body.match(/(?:(?:https?:\/\/)?(?:(?:www|m)\.)?)?youtu(?:be\.com\/(?:watch\?v=|embed\/)|\.be\/)([\w-]{10}[048AEIMQUYcgkosw])(?:(?:\?|&(amp;)?)[^\s&?]+)*/);
-                            if(youtubeLink) result.title += ' youtu.be/' + youtubeLink[1];
+                            if(youtubeLink) {
+                                endLink =  ' youtu.be/' + youtubeLink[1];
+                                metadata.image = [];
+                            }
                         }
                     }
                     for(let target in social_networks) {
                         if(social_networks[target]) {
-                            const values = {
-                                author: author,
-                                link: '%' + '_'.repeat(targets[target].LINK_LENGTH - 2) + '%',
-                                tags: tags,
-                                title: result.title
-                            }
+                            values.link = '%' + '_'.repeat(targets[target].LINK_LENGTH - 2) + '%';
                             let structure = parser.parse(template[type], values);
-                            while(structure.parsed.length > targets[target].MAX_LENGTH) {
+                            while(structure.parsed.length + endLink.length > targets[target].MAX_LENGTH) {
                                 structure = parser.removeLeastImportant(structure);
                             }
-                            structure.parsed = structure.parsed.replace(values.link, website);
-                            targets[target].add(type === 'tweet_like', structure.parsed, type === 'tweet_like' ? metadata.image || [] : website);
+                            structure.parsed = structure.parsed.replace(values.link, website) + endLink;
+                            targets[target].add(type === 'tweet_like', structure.parsed.replace(/ {2,}/g, ' '), type === 'tweet_like' ? metadata.image || [] : website);
                         }
                     }
                 }
