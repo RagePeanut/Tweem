@@ -71,10 +71,11 @@
             "ragepeanut"
         ],
         "tweet_like": [
-            "happypeanut"
+            "nuttinghere"
         ]
     },
     "stream_nodes": [
+        "https://api.steemit.com",
         "https://rpc.buildteam.io",
         "https://rpc.steemviz.com",
         "https://steemd.minnowsupportproject.org"
