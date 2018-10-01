@@ -222,7 +222,7 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'www.vimm.tv/@' + author;
         case 'zappl':
             return 'zappl.com/' + url.split('/')[1] + '/' + author + '/' + permlink;
-        // Apps that get a steemit.com link: steemit, dbooks, chainbb, esteem, masdacs, steemauto, steempress, share2steem, postpromoter, Steem Harry Games, vote-buyer, steemjs, piston-lib, undefined
+        // Apps that get a steemit.com link: steemit, dbooks, chainbb, esteem, masdacs, steemauto, steempress, share2steem, actifit, postpromoter, Steem Harry Games, vote-buyer, steemjs, piston-lib, undefined
         // The list of supported apps is manually updated. If an app is missing, please contact me through any of the means specified in the README file or send a new issue
         default:
             return 'steemit.com' + url;

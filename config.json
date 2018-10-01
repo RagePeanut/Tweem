@@ -7,6 +7,7 @@
     ],
     "settings": {
         "allowed_apps": {
+            "actifit": 2,
             "bescouted": 2,
             "blockdeals": 2,
             "busy": 2,

@@ -74,22 +74,23 @@ title | The post's title | Ellipsis
 ## Supported apps
 Website | Label | Official description | Posting | Viewing
 -|-|-|:-:|:-:
+**[Actifit](https://actifit.io/) | actifit | Rewarding Fitness Activity | **✓** | ✓
 **[BeScouted](https://www.bescouted.com/)** | bescouted | Photography community that rewards for creating quality content. | **✓** | ✓
 **[BlockDeals](https://blockdeals.org/)** | blockdeals | A Community Platform for Bargain Hunters and Deal Spotters. | **✓** | ✓ 
 **[BlockPress](https://blockpress.me/)** | blockpress | Blockchain based content management system. | ✗ | **✓**
 **[Busy](https://busy.org/)** | busy | Ensuring compensation for the creators of value. | **✓** | **✓**
 **[Coogger](http://www.coogger.com/)** | coogger | An information sharing network that works with multiple applications. | **✓** | **✓**
-**[dlike](https://dlike.io/)** | dlike | Share What You Like. | **✓** | ✓
+**[dlike](https://dlike.io/)** | dlike | Share What You Like | **✓** | ✓
 **[dMania](https://dmania.lol/)** | dmania | Make money with memes, funny pictures and videos. | **✓** | ✓
 **[dPoll](https://dpoll.xyz/)** | dpoll | Decentralized poll app on top of the STEEM blockchain. | **✓** | ✓
-**[DSound](https://dsound.audio/)** | dsound | Decentralized Sound Platform. | **✓** | ✓
+**[DSound](https://dsound.audio/)** | dsound | Decentralized Sound Platform | **✓** | ✓
 **[DTube](https://d.tube/)** | dtube | The first crypto-decentralized video platform, built on top of the **STEEM** Blockchain and the **IPFS** peer-to-peer network. | **✓** | ✓
 **[eSteem](https://esteem.app/)** | esteem | Blog, vote, share pictures and get paid. | **✓** | **✓**
 **[Fundition](https://fundition.io/)** | fundition | A next-generation, decentralized, peer-to-peer crowdfunding and collaboration platform. | **✓** | ✓
 **[Głodni Wiedzy](https://glodniwiedzy.pl/)** | glodniwiedzy | Dedicated Polish Steem user interface for displaying content of selected users. | ✗ | ✓
-**[Hede](https://hede.io/)** | hede | Knowledge Sharing Dictionary. | **✓** | ✓
-**[Insteem](https://www.insteem.com/)** | insteem | Decentralized News by Independent Journalists. | ✗ | **✓**
-**[Knacksteem](https://knacksteem.org/)** | knacksteem | Rewarding Talent. | **✓** | ✓
+**[Hede](https://hede.io/)** | hede | Knowledge Sharing Dictionary | **✓** | ✓
+**[Insteem](https://www.insteem.com/)** | insteem | Decentralized News by Independent Journalists | ✗ | **✓**
+**[Knacksteem](https://knacksteem.org/)** | knacksteem | Rewarding Talent | **✓** | ✓
 **[Memeit.LOL](https://memeit.lol/)** | memeit.lol | A creative platform you can use to create your own meme and post it on the Steem Blockchain. | **✓** | ✓
 **[mTasks](https://steemmtask.herokuapp.com/)** | mTasks | A Fiverr like platform built on top of **STEEM** Blockchain. | **✓** | ✓
 **[Parley](https://www.parley.io/)** | parley | The place where conversations happen. | **✓** | ✓
@@ -107,7 +108,7 @@ Website | Label | Official description | Posting | Viewing
 **[Strimi](https://strimi.pl/)** | strimi | An interface for the **STEEM** blockchain that acts like **Reddit**. | **✓** | **✓**
 **[Ulogs](https://ulogs.org/)** | ulogs | "True celebrity-hood" once and for all, for "everyone". | **✓** | **✓**
 **[Uneeverso](https://www.uneeverso.com/)** | uneeverso | Gestión de automatización **STEEM**. | ✗ | **✓**
-**[Utopian](https://utopian.io/)** | utopian | Rewarding Open Source Contributors. | **✓** | ✓
+**[Utopian](https://utopian.io/)** | utopian | Rewarding Open Source Contributors | **✓** | ✓
 **[Vimm.TV](https://www.vimm.tv/)** | vimm.tv | Live Streaming Made Easy - Monetization Simplified | **✓** | ✓
 **[Zappl](https://zappl.com/)** | zappl | Decentralized censorship resistant micro blogging Social Media site that pays. | **✓** | ✓
 
