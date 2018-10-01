@@ -148,18 +148,17 @@ function getWebsite(app, author, permlink, url, tags, body) {
         else if(tags[0] === 'knacksteem') app = tags[0];
     }
     if(settings.allowed_apps[app] === 0) return null;
-    if(settings.allowed_apps[app] === 1) {
-        const allowedDefaultApps = ['blockpress', 'busy', 'coogger', 'insteem', 'steemd', 'steemdb', 'steemit', 'steemkr', 'steempeak', 'steeve', 'strimi', 'ulogs', 'uneeverso'];
-        app = settings.default_app;
-        // If the app specified in settings.default_app doesn't exist, doesn't support viewing posts, isn't yet supported or isn't correctly written, use Steemit for the link
-        if(!allowedDefaultApps.includes(app) && settings.allowed_apps[app] !== 2) app = 'steemit';
-    }
+    const allowedDefaultApps = ['blockpress', 'busy', 'coogger', 'insteem', 'steemd', 'steemdb', 'steemit', 'steemkr', 'steempeak', 'steeve', 'strimi', 'ulogs', 'uneeverso'];
+    // If the app specified in settings.default_app doesn't exist, doesn't support viewing posts, isn't yet supported or isn't correctly written, use Steemit as the default app
+    const defaultApp = allowedDefaultApps.includes(settings.default_app) ? settings.default_app : 'steemit';
+    if(settings.allowed_apps[app] === 1 || !settings.allowed_apps.hasOwnProperty(app)) app = defaultApp;
     switch(app) {
         case 'bescouted':
             // Bescouted links don't follow the Steem apps logic, therefore the link has to be fetched from the body
-            const link = body.match(/\(?:https:\/\/www\.(bescouted\.com\/photo\/\d{8,}\/[\w-]+\/\d{8,})\/\)/)[0];
+            const link = body.match(/\(?:https:\/\/www\.(bescouted\.com\/photo\/\d{8,}\/[\w-]+\/\d{8,})\/\)/);
             // If the user removed the website link, the post is linked to the default app
-            if(link) return link;
+            if(link) return link[0];
+            else return getWebsite(defaultApp, author, permlink, url, tags, body);
         case 'blockdeals':
             return 'blockdeals.org' + url;
         case 'blockpress':
@@ -202,6 +201,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'steemgigs.org/@' + author + '/' + permlink;
         case 'steemhunt':
             return 'steemhunt.com/@' + author + '/' + permlink;
+        case 'steemit':
+            return 'steemit.com' + url;
         case 'steemkr':
             return 'steemkr.com' + url;
         case 'steempeak':
@@ -221,10 +222,9 @@ function getWebsite(app, author, permlink, url, tags, body) {
         case 'vimm.tv':
             return 'www.vimm.tv/@' + author;
         case 'zappl':
-            return 'zappl.com/' + url.split('/')[1] + '/' + author + '/' + permlink;
-        // Apps that get a steemit.com link: steemit, dbooks, chainbb, esteem, masdacs, steemauto, steempress, share2steem, actifit, postpromoter, Steem Harry Games, vote-buyer, steemjs, piston-lib, undefined
-        // The list of supported apps is manually updated. If an app is missing, please contact me through any of the means specified in the README file or send a new issue
+            return 'zappl.com' + url.split('/')[1] + '/' + author + '/' + permlink;
         default:
-            return 'steemit.com' + url;
+            // This default action shouldn't ever be reached and has been left there just in case something unforeseen happens
+            return getWebsite(defaultApp, author, permlink, url, tags, body);
     }
 }
