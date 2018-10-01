@@ -149,7 +149,7 @@ function getWebsite(app, author, permlink, url, tags, body) {
     }
     if(settings.allowed_apps[app] === 0) return null;
     if(settings.allowed_apps[app] === 1) {
-        const allowedDefaultApps = ['blockpress', 'busy', 'coogger', 'insteem', 'steemd', 'steemdb', 'steemit', 'steemkr', 'steempeak', 'strimi', 'ulogs', 'uneeverso'];
+        const allowedDefaultApps = ['blockpress', 'busy', 'coogger', 'insteem', 'steemd', 'steemdb', 'steemit', 'steemkr', 'steempeak', 'steeve', 'strimi', 'ulogs', 'uneeverso'];
         app = settings.default_app;
         // If the app specified in settings.default_app doesn't exist, doesn't support viewing posts, isn't yet supported or isn't correctly written, use Steemit for the link
         if(!allowedDefaultApps.includes(app) && settings.allowed_apps[app] !== 2) app = 'steemit';
@@ -208,6 +208,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'steempeak.com' + url;
         case 'steepshot':
             return 'alpha.steepshot.io/post/@' + author + '/' + permlink;
+        case 'steeve':
+            return 'www.steeve.app/@' + author + '/' + permlink;
         case 'strimi':
             return 'strimi.pl' + url;
         case 'ulogs':
