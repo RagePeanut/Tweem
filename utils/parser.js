@@ -162,6 +162,7 @@ function processVariable(variable, modifier, values) {
                     share2steem: /^share2steem$/,
                     steemgig: /^steemgigs?$/,
                     steemhunt: /^steemhunt$/,
+                    steemstem: /^steemstem$/,
                     steepshot: /^steepshot$/,
                     strimi: /^strim(-[a-z]+)?$/,
                     ulogs: /^ulog(-[a-z-]+)?$/,

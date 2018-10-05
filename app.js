@@ -148,7 +148,7 @@ function getWebsite(app, author, permlink, url, tags, body) {
         else if(tags[0] === 'knacksteem') app = tags[0];
     }
     if(settings.allowed_apps[app] === 0) return null;
-    const allowedDefaultApps = ['blockpress', 'busy', 'coogger', 'insteem', 'steemd', 'steemdb', 'steemit', 'steemkr', 'steempeak', 'steeve', 'strimi', 'ulogs', 'uneeverso'];
+    const allowedDefaultApps = ['blockpress', 'busy', 'coogger', 'insteem', 'steemd', 'steemdb', 'steemit', 'steemkr', 'steempeak', 'steemstem', 'steeve', 'strimi', 'ulogs', 'uneeverso'];
     // If the app specified in settings.default_app doesn't exist, doesn't support viewing posts, isn't yet supported or isn't correctly written, use Steemit as the default app
     const defaultApp = allowedDefaultApps.includes(settings.default_app) ? settings.default_app : 'steemit';
     if(settings.allowed_apps[app] === 1 || !settings.allowed_apps.hasOwnProperty(app)) app = defaultApp;
@@ -207,6 +207,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'steemkr.com' + url;
         case 'steempeak':
             return 'steempeak.com' + url;
+        case 'steemstem':
+            return 'www.steemstem.io/#!/@' + author + '/' + permlink;
         case 'steepshot':
             return 'alpha.steepshot.io/post/@' + author + '/' + permlink;
         case 'steeve':
