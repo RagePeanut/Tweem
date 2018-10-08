@@ -74,7 +74,7 @@ title | The post's title | Ellipsis
 ## Supported apps
 Website | Label | Official description | Posting | Viewing
 -|-|-|:-:|:-:
-**[Actifit](https://actifit.io/) | actifit | Rewarding Fitness Activity | **✓** | ✓
+**[Actifit](https://actifit.io/)** | actifit | Rewarding Fitness Activity | **✓** | ✓
 **[BeScouted](https://www.bescouted.com/)** | bescouted | Photography community that rewards for creating quality content. | **✓** | ✓
 **[BlockDeals](https://blockdeals.org/)** | blockdeals | A Community Platform for Bargain Hunters and Deal Spotters. | **✓** | ✓ 
 **[BlockPress](https://blockpress.me/)** | blockpress | Blockchain based content management system. | ✗ | **✓**
