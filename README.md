@@ -79,6 +79,7 @@ Website | Label | Official description | Posting | Viewing
 **[BlockDeals](https://blockdeals.org/)** | blockdeals | A Community Platform for Bargain Hunters and Deal Spotters. | **✓** | ✓ 
 **[BlockPress](https://blockpress.me/)** | blockpress | Blockchain based content management system. | ✗ | **✓**
 **[Busy](https://busy.org/)** | busy | Ensuring compensation for the creators of value. | **✓** | **✓**
+**[Contest Hero](https://www.contesthero.io/)** | contest_hero | Helping you to find, create and enter the best contests on the Steem Blockchain. | **✓** | ✓
 **[Coogger](http://www.coogger.com/)** | coogger | An information sharing network that works with multiple applications. | **✓** | **✓**
 **[dlike](https://dlike.io/)** | dlike | Share What You Like | **✓** | ✓
 **[dMania](https://dmania.lol/)** | dmania | Make money with memes, funny pictures and videos. | **✓** | ✓

@@ -165,6 +165,8 @@ function getWebsite(app, author, permlink, url, tags, body) {
             return 'blockpress.me/?p=steem' + url;
         case 'busy':
             return 'busy.org/@' + author + '/' + permlink;
+        case 'contest_hero':
+            return 'www.contesthero.io/view-contest/' + author + '/' + permlink;
         case 'coogger':
             return 'www.coogger.com/@' + author + '/' + permlink;
         case 'dlike':

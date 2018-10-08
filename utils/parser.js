@@ -145,6 +145,7 @@ function processVariable(variable, modifier, values) {
                     bescouted: /^bescouted$/,
                     blockdeals: /^blockdeals(-[a-z]+)?$/,
                     busy: /^busy$/,
+                    contest_hero: /^contest-hero|ch-[a-z]+$/,
                     coogger: /^coogger$/,
                     dlike: /^dlike(-[A-Za-z]+)?$/,
                     dmania: /^dmania$/,
